@@ -15,7 +15,29 @@
     "noImplicitReturns": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "jsxImportSource": "@emotion/react" // Add the css prop
+    "jsxImportSource": "@emotion/react", // Add the css prop
+    "paths": {
+      "app": ["./app"],
+      "app/*": ["./app/*"],
+
+      "pages": ["./pages"],
+      "pages/*": ["./pages/*"],
+
+      "processes": ["./processes"],
+      "processes/*": ["./processes/*"],
+
+      "widgets": ["./widgets"],
+      "widgets/*": ["./widgets/*"],
+
+      "features": ["./features"],
+      "features/*": ["./features/*"],
+
+      "entities": ["./entities"],
+      "entities/*": ["./entities/*"],
+
+      "shared": ["./shared"],
+      "shared/*": ["./shared/*"]
+    }
   },
   "include": ["src", "types"]
 }

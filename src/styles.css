@@ -1,0 +1,21 @@
+@layer base {
+  body {
+    margin: 0;
+  }
+
+  @font-face {
+    font-family: 'Roboto';
+    src: url('./shared/assets/fonts/Roboto-Regular.ttf') format('truetype');
+    font-weight: 400;
+  }
+
+  @font-face {
+    font-family: 'Roboto';
+    src: url('./shared/assets/fonts/Roboto-Bold.ttf') format('truetype');
+    font-weight: 700;
+  }
+
+  * {
+    font-family: 'Roboto', sans-serif;
+  }
+}
