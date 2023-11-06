@@ -1,13 +1,15 @@
-import { socket } from 'config';
+import { socket } from 'shared/config';
 import { ChangeEvent, FormEvent, useCallback, useEffect } from 'react';
-import { useReducerAsState } from 'shared';
+import { joinRoom, useReducerAsState } from 'shared';
+import { useNavigate } from 'react-router-dom';
 
 export const useCreateGameEvents = () => {
-  const [{ userName, roomName, roomId }, setState] = useReducerAsState({
+  const [{ userName, roomName }, setState] = useReducerAsState({
     userName: '',
     roomName: '',
-    roomId: '',
   });
+
+  const navigate = useNavigate();
 
   const handleRoomChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -24,27 +26,18 @@ export const useCreateGameEvents = () => {
   const handleSumbit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-
-      socket.connect();
-
-      if (userName && roomName) {
-        socket.emit('join', { userName, roomName });
-
-        socket.on('session-joined', ({ roomId }) => {
-          setState({ roomId });
-        });
-      }
+      joinRoom({
+        userName,
+        roomName,
+        onSessionJoined: ({ roomId }) => {
+          navigate(`/room/${roomId}`);
+        },
+      });
     },
     [userName, roomName],
   );
 
-  useEffect(() => {
-    // TODO: add listener
-    () => socket.off('session-joined');
-  }, []);
-
   return {
-    roomId,
     roomName,
     userName,
     handleRoomChange,

@@ -8,11 +8,11 @@ module.exports = function webpackConfig(env, args) {
     output: {
       filename: 'main.js',
       path: path.join(__dirname, 'public'),
+      publicPath: '/',
     },
     resolve: {
       alias: {
         app: path.resolve(__dirname, 'src/app'),
-        config: path.resolve(__dirname, 'src/config'),
         pages: path.resolve(__dirname, 'src/pages'),
         processes: path.resolve(__dirname, 'src/processes'),
         widgets: path.resolve(__dirname, 'src/widgets'),
@@ -51,8 +51,7 @@ module.exports = function webpackConfig(env, args) {
       ],
     },
     devServer: {
-      hot: true,
-      open: true,
+      historyApiFallback: true,
       static: { directory: path.join(__dirname, 'public') },
     },
   };

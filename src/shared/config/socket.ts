@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const serverUrl = 'http://192.168.0.16:3000';
+const serverUrl = process.env.BACK_URL || '';
 export const socket = io(serverUrl, {
   autoConnect: false,
 });

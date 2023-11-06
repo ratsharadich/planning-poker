@@ -1,7 +1,19 @@
 import axios, { AxiosError } from 'axios';
-import { api } from '../constants';
+import { api } from 'shared/config';
 
-export const getUsers = async (roomId: string) => {
+export type RoomType = {
+  room: {
+    id: string;
+    name: string;
+  };
+  users: Array<{
+    id: string;
+    name: string;
+  }>;
+  timestamp: number;
+};
+
+export const getRoom = async (roomId: string): Promise<RoomType> => {
   try {
     const response = await api.get(`/users`, {
       params: {
