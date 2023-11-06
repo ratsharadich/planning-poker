@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = function webpackConfig(env, args) {
   return {
@@ -11,6 +12,7 @@ module.exports = function webpackConfig(env, args) {
     resolve: {
       alias: {
         app: path.resolve(__dirname, 'src/app'),
+        config: path.resolve(__dirname, 'src/config'),
         pages: path.resolve(__dirname, 'src/pages'),
         processes: path.resolve(__dirname, 'src/processes'),
         widgets: path.resolve(__dirname, 'src/widgets'),
@@ -31,7 +33,7 @@ module.exports = function webpackConfig(env, args) {
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
+          use: ['style-loader', 'css-loader', 'postcss-loader'],
         },
       ],
     },
@@ -40,6 +42,7 @@ module.exports = function webpackConfig(env, args) {
         template: 'src/index.html',
         output: 'index.html',
       }),
+      new Dotenv(),
     ],
     optimization: {
       minimizer: [

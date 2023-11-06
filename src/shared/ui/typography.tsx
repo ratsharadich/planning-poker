@@ -1,9 +1,16 @@
 import tw, { styled } from 'twin.macro';
 
-const Body1_400 = styled.span`
+const Body14_400 = styled.span`
+  ${tw`text-sm font-normal`}
+`;
+const Body14_700 = styled.span`
+  ${tw`text-sm font-bold`}
+`;
+
+const Body16_400 = styled.span`
   ${tw`text-base font-normal`}
 `;
-const Body1_700 = styled.span`
+const Body16_700 = styled.span`
   ${tw`text-base font-bold`}
 `;
 
@@ -18,8 +25,10 @@ const H3 = styled.h3`
 `;
 
 export const Typography = {
-  Body1_400,
-  Body1_700,
+  Body14_400,
+  Body14_700,
+  Body16_400,
+  Body16_700,
   H1,
   H2,
   H3,

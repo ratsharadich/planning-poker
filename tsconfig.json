@@ -20,6 +20,9 @@
       "app": ["./app"],
       "app/*": ["./app/*"],
 
+      "config": ["./config"],
+      "config/*": ["./config/*"],
+
       "pages": ["./pages"],
       "pages/*": ["./pages/*"],
 
