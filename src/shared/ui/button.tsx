@@ -21,8 +21,8 @@ export const Button: FC<Props> = ({
 };
 
 const ButtonStyled = styled.button<Omit<Props, 'children'>>`
-  ${tw`rounded-lg border-2 border-solid cursor-pointer`}
   ${tw`transition-colors duration-300`}
+  ${tw`rounded-lg border-2 border-solid cursor-pointer px-2`}
 
   ${({ intent, disabled }) =>
     intent === 'primary' &&

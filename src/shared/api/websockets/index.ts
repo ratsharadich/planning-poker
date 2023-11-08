@@ -1,1 +1,1 @@
-export * from './join-room';
+export * from './use-auth';

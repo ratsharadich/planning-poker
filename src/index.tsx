@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: '/room/:roomId',
+    path: 'room/:roomId',
     element: <Room />,
   },
 ]);

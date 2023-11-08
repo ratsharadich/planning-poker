@@ -1,6 +1,5 @@
-import { socket } from 'shared/config';
-import { ChangeEvent, FormEvent, useCallback, useEffect } from 'react';
-import { joinRoom, useReducerAsState } from 'shared';
+import { ChangeEvent, FormEvent, useCallback } from 'react';
+import { addUserToStorage, createGuid, useReducerAsState } from 'shared';
 import { useNavigate } from 'react-router-dom';
 
 export const useCreateGameEvents = () => {
@@ -26,13 +25,11 @@ export const useCreateGameEvents = () => {
   const handleSumbit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      joinRoom({
-        userName,
-        roomName,
-        onSessionJoined: ({ roomId }) => {
-          navigate(`/room/${roomId}`);
-        },
-      });
+
+      addUserToStorage({ userName });
+
+      const roomId = createGuid();
+      navigate(`/room/${roomId}`);
     },
     [userName, roomName],
   );

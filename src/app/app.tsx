@@ -1,6 +1,26 @@
-import { NewGame } from 'pages';
-import { FC } from 'react';
+import { FC, useCallback, useState } from 'react';
+import { Page, Typography, useReducerAsState } from 'shared';
+import { CreateGame } from './features';
 
 export const App: FC = () => {
-  return <NewGame />;
+  const [createForm, setCreateForm] = useState(false);
+
+  const handleCreateFormOpen = useCallback(() => {
+    setCreateForm(true);
+  }, []);
+
+  return (
+    <Page tw="flex flex-col justify-center items-center gap-4">
+      {!createForm && (
+        <header tw="flex flex-col items-center gap-1">
+          <Typography.H1>Planning poker</Typography.H1>
+          <Typography.Body16_400>
+            Оценка задач в сторипоинтах
+          </Typography.Body16_400>
+        </header>
+      )}
+
+      <CreateGame show={createForm} onOpen={handleCreateFormOpen} />
+    </Page>
+  );
 };
