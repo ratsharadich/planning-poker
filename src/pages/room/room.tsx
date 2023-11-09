@@ -1,30 +1,23 @@
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, Fragment, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, userAuth } from 'shared';
-import tw, { css } from 'twin.macro';
+import { Typography, useReducerAsState, useAuth } from 'shared';
+import { Socket } from 'socket.io-client';
+import { useRoomEvents } from './hooks';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
 
-  const { userId, userName, users, socketRef } = userAuth({
+  const socketRef = useRef<Socket | null>(null);
+
+  const { userId, userName, users } = useAuth({
     roomId: roomId || '',
+    socketRef,
   });
 
-  console.log('users', users);
-
-  const handleCardRotate = () => {
-    // console.log(socketRef.current, 'socketRef.current');
-    socketRef.current?.emit('card:rotate');
-  };
-
-  const [rotate, setRotate] = useState(0);
-
-  useEffect(() => {
-    socketRef.current?.on('card', card => {
-      console.log(card, 'card');
-      setRotate(card);
-    });
-  }, []);
+  const { cards, handleGetCards, handleUpdateCard } = useRoomEvents({
+    userId,
+    socketRef,
+  });
 
   return (
     <Fragment>
@@ -40,15 +33,31 @@ export const Room: FC = () => {
         </div>
       ))}
 
-      <div
-        css={[
-          tw`h-[200px] w-[100px] bg-black mt-8 ml-28`,
-          css`
-            transform: rotate(${rotate}deg);
-          `,
-        ]}
-        onClick={handleCardRotate}
-      />
+      <button onClick={handleGetCards}>Обновить карты</button>
+
+      <div tw="flex gap-3">
+        {Object.entries(cards).map(([id, { userId: cardUserId, value }]) => (
+          <div
+            key={id}
+            tw="h-[200px] w-[200px] bg-black flex flex-col gap-1 text-white rounded-lg"
+            // disabled={cardUserId !== userId}
+          >
+            <span>{cardUserId}</span>
+            <span>{value}</span>
+          </div>
+        ))}
+      </div>
+
+      <div tw="flex gap-1">
+        {Array.from(Array(3), (_, index) => (
+          <div
+            tw="bg-black h-8 w-8 text-white"
+            onClick={() => handleUpdateCard(index + 1)}
+          >
+            {index + 1}
+          </div>
+        ))}
+      </div>
     </Fragment>
   );
 };
