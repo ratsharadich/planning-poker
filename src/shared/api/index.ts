@@ -1,1 +1,1 @@
-export * from './websockets';
+export * from './socket-io';

@@ -1,8 +1,8 @@
-import { FC, Fragment, useEffect, useRef } from 'react';
+import { FC, Fragment, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, useReducerAsState, useAuth } from 'shared';
+import { Typography } from 'shared';
 import { Socket } from 'socket.io-client';
-import { useRoomEvents } from './hooks';
+import { useAuth, useRoomEvents } from './hooks';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
@@ -51,6 +51,7 @@ export const Room: FC = () => {
       <div tw="flex gap-1">
         {Array.from(Array(3), (_, index) => (
           <div
+            key={index}
             tw="bg-black h-8 w-8 text-white"
             onClick={() => handleUpdateCard(index + 1)}
           >

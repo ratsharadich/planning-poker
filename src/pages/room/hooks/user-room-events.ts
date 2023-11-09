@@ -1,5 +1,5 @@
-import { MutableRefObject, useEffect } from 'react';
-import { useReducerAsState } from 'shared';
+import { MutableRefObject, useCallback, useEffect } from 'react';
+import { SocketActions, SocketListeners, useReducerAsState } from 'shared';
 import { Socket } from 'socket.io-client';
 
 type Args = {
@@ -13,22 +13,26 @@ export const useRoomEvents = ({ socketRef, userId }: Args) => {
     list: Record<string, { userId: string; value: string | number }>;
   }>({ showed: false, list: {} });
 
-  const handleGetCards = () => {
-    socketRef.current?.emit('cards:get');
-  };
+  const { getCards, updateCard } = SocketActions;
+  const { listenCards } = SocketListeners;
 
-  const handleUpdateCard = (value: string | number) => {
-    socketRef.current?.emit('card:update', {
-      userId,
-      value,
-    });
-  };
+  const handleGetCards = useCallback(() => {
+    if (socketRef.current) {
+      getCards({ socket: socketRef.current });
+    }
+  }, []);
+
+  const handleUpdateCard = useCallback((value: string | number) => {
+    if (socketRef.current) {
+      updateCard({ socket: socketRef.current, userId, value });
+    }
+  }, []);
 
   useEffect(() => {
     if (socketRef.current) {
-      socketRef.current.on('cards', cards => {
-        setState(cards);
-        console.log(cards, 'cards');
+      listenCards({
+        socket: socketRef.current,
+        onUpdate: cards => setState(cards),
       });
     }
   }, []);
