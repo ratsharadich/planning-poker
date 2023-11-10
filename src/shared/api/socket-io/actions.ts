@@ -32,6 +32,10 @@ const updateCard = ({
   });
 };
 
+const setCardsShown = ({ socket, show }: { socket: Socket; show: boolean }) => {
+  socket.emit(ACTIONS.SHOW_CARDS, { show });
+};
+
 const leave = ({ socket, userId }: { socket: Socket; userId: UserId }) => {
   socket.emit(ACTIONS.USER_LEAVE, { userId });
 };
@@ -40,5 +44,6 @@ export const SocketActions = {
   addUser,
   getCards,
   updateCard,
+  setCardsShown,
   leave,
 };

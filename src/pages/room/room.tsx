@@ -1,8 +1,9 @@
 import { FC, Fragment, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography } from 'shared';
+import { Page, SocketActions, Typography } from 'shared';
 import { Socket } from 'socket.io-client';
 import { useAuth, useRoomEvents } from './hooks';
+import { Table } from './widgets';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
@@ -14,51 +15,57 @@ export const Room: FC = () => {
     socketRef,
   });
 
-  const { cards, handleGetCards, handleUpdateCard } = useRoomEvents({
+  const { cards, shown, handleGetCards, handleUpdateCard } = useRoomEvents({
     userId,
     socketRef,
   });
 
   return (
-    <Fragment>
-      <Typography.H2>userId: {userId}</Typography.H2>
-      <Typography.H2>userName: {userName}</Typography.H2>
-      {/* <Typography.H2>roomName: {roomName}</Typography.H2> */}
+    <Page tw="grid grid-rows-[auto,1fr,auto] grid-cols-1 justify-items-center items-center">
+      <header tw="mb-auto">
+        <Typography.H2>userId: {userId}</Typography.H2>
+        <Typography.H2>userName: {userName}</Typography.H2>
+        {/* <Typography.H2>roomName: {roomName}</Typography.H2> */}
 
-      <Typography.H2>Юзеры</Typography.H2>
-      {Object.entries(users).map(([id, { userName, online }]) => (
-        <div key={id}>
-          <span>{userName}</span>
-          <span>{online}</span>
+        <Typography.H2>Юзеры</Typography.H2>
+        {Object.entries(users).map(([id, { userName, online }]) => (
+          <div key={id}>
+            <span>{userName}</span>
+            <span>{online}</span>
+          </div>
+        ))}
+
+        <button onClick={handleGetCards}>Обновить карты</button>
+      </header>
+
+      <Table shown={shown} cards={cards} />
+
+      <footer>
+        <div tw="flex gap-1">
+          {Array.from(Array(3), (_, index) => (
+            <div
+              key={index}
+              tw="bg-black h-8 w-8 text-white"
+              onClick={() => handleUpdateCard(index + 1)}
+            >
+              {index + 1}
+            </div>
+          ))}
         </div>
-      ))}
 
-      <button onClick={handleGetCards}>Обновить карты</button>
-
-      <div tw="flex gap-3">
-        {Object.entries(cards).map(([id, { userId: cardUserId, value }]) => (
-          <div
-            key={id}
-            tw="h-[200px] w-[200px] bg-black flex flex-col gap-1 text-white rounded-lg"
-            // disabled={cardUserId !== userId}
-          >
-            <span>{cardUserId}</span>
-            <span>{value}</span>
-          </div>
-        ))}
-      </div>
-
-      <div tw="flex gap-1">
-        {Array.from(Array(3), (_, index) => (
-          <div
-            key={index}
-            tw="bg-black h-8 w-8 text-white"
-            onClick={() => handleUpdateCard(index + 1)}
-          >
-            {index + 1}
-          </div>
-        ))}
-      </div>
-    </Fragment>
+        <button
+          onClick={() => {
+            if (socketRef.current) {
+              SocketActions.setCardsShown({
+                socket: socketRef.current,
+                show: !shown,
+              });
+            }
+          }}
+        >
+          Открыть карты
+        </button>
+      </footer>
+    </Page>
   );
 };

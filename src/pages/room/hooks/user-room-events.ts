@@ -1,5 +1,10 @@
 import { MutableRefObject, useCallback, useEffect } from 'react';
-import { SocketActions, SocketListeners, useReducerAsState } from 'shared';
+import {
+  CardsState,
+  SocketActions,
+  SocketListeners,
+  useReducerAsState,
+} from 'shared';
 import { Socket } from 'socket.io-client';
 
 type Args = {
@@ -8,12 +13,14 @@ type Args = {
 };
 
 export const useRoomEvents = ({ socketRef, userId }: Args) => {
-  const [{ showed, list: cards }, setState] = useReducerAsState<{
-    showed: boolean;
-    list: Record<string, { userId: string; value: string | number }>;
-  }>({ showed: false, list: {} });
+  const [{ shown, list: cards }, setState] = useReducerAsState<CardsState>({
+    shown: false,
+    list: {},
+  });
 
-  const { getCards, updateCard } = SocketActions;
+  console.log(shown, 'showed');
+
+  const { getCards, updateCard, setCardsShown } = SocketActions;
   const { listenCards } = SocketListeners;
 
   const handleGetCards = useCallback(() => {
@@ -29,13 +36,18 @@ export const useRoomEvents = ({ socketRef, userId }: Args) => {
   }, []);
 
   useEffect(() => {
-    if (socketRef.current) {
+    const socket = socketRef.current;
+    if (socket) {
+      setCardsShown({ socket, show: false });
+
       listenCards({
-        socket: socketRef.current,
+        socket,
         onUpdate: cards => setState(cards),
       });
     }
+
+    return () => undefined;
   }, []);
 
-  return { cards, handleGetCards, handleUpdateCard };
+  return { cards, shown, handleGetCards, handleUpdateCard };
 };
