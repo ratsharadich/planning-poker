@@ -1,4 +1,4 @@
-import { Card } from 'pages/room/entities';
+import { PokerCard } from 'pages/room/entities';
 import { ReactNode } from 'react';
 import { CardList, CardValue } from 'shared';
 
@@ -50,5 +50,5 @@ function getCard({
   value: CardValue;
   shown: boolean;
 }) {
-  return <Card key={id} shown={shown} value={value} />;
+  return <PokerCard key={id} shown={shown} value={value} />;
 }

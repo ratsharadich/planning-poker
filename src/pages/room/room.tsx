@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Page, SocketActions, Typography } from 'shared';
 import { Socket } from 'socket.io-client';
 import { useAuth, useRoomEvents } from './hooks';
-import { Table } from './widgets';
+import { Estimation, Table } from './widgets';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
@@ -15,8 +15,7 @@ export const Room: FC = () => {
     socketRef,
   });
 
-  const { cards, shown, handleGetCards, handleUpdateCard } = useRoomEvents({
-    userId,
+  const { cards, shown, handleGetCards } = useRoomEvents({
     socketRef,
   });
 
@@ -38,34 +37,13 @@ export const Room: FC = () => {
         <button onClick={handleGetCards}>Обновить карты</button>
       </header>
 
-      <Table shown={shown} cards={cards} />
+      <Table socketRef={socketRef} shown={shown} cards={cards} />
 
-      <footer>
-        <div tw="flex gap-1">
-          {Array.from(Array(3), (_, index) => (
-            <div
-              key={index}
-              tw="bg-black h-8 w-8 text-white"
-              onClick={() => handleUpdateCard(index + 1)}
-            >
-              {index + 1}
-            </div>
-          ))}
-        </div>
-
-        <button
-          onClick={() => {
-            if (socketRef.current) {
-              SocketActions.setCardsShown({
-                socket: socketRef.current,
-                show: !shown,
-              });
-            }
-          }}
-        >
-          Открыть карты
-        </button>
-      </footer>
+      <Estimation
+        socketRef={socketRef}
+        userId={userId}
+        cardValue={cards[userId]}
+      />
     </Page>
   );
 };

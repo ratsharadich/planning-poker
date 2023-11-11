@@ -1,22 +1,6 @@
-import { FC } from 'react';
-import { CardValue, UserId } from 'shared';
 import tw, { css, styled } from 'twin.macro';
 
-type Props = {
-  shown: boolean;
-  value: CardValue;
-};
-
-export const Card: FC<Props> = ({ shown, value }) => {
-  return (
-    <CardStyled className="group">
-      <Face shown={shown}>{value}</Face>
-      <Back hide={shown} highlighted={Boolean(value)} />
-    </CardStyled>
-  );
-};
-
-const CardStyled = styled.article`
+export const CardStyled = styled.article`
   ${tw`w-10 h-[4.375rem] relative`}
   ${css`
     perspective: 150rem;
@@ -31,7 +15,7 @@ const Side = styled.div`
   `}
 `;
 
-const Face = styled(Side)<{ shown: boolean }>`
+export const Face = styled(Side)<{ shown: boolean }>`
   ${tw`flex justify-center items-center text-emerald-800`}
   ${tw`border-2 border-emerald-400 border-solid`}
   ${css`
@@ -44,8 +28,17 @@ const Face = styled(Side)<{ shown: boolean }>`
     `}
 `;
 
-const Back = styled(Side)<{ highlighted: boolean; hide: boolean }>`
-  ${({ highlighted }) => (highlighted ? tw`bg-emerald-200` : tw`bg-gray-200`)}
+const cardShirt = (color: string) => css`
+  background: linear-gradient(90deg, ${color} 50%, transparent 0),
+    linear-gradient(${color} 50%, transparent 0);
+  background-size: 1rem 1rem;
+`;
+
+export const Back = styled(Side)<{ highlighted: boolean; hide: boolean }>`
+  ${({ highlighted }) =>
+    highlighted
+      ? cardShirt('rgba(245, 158, 11, 0.6)')
+      : cardShirt('rgba(16, 185, 129, 0.6)')}
   ${({ hide }) =>
     hide &&
     css`

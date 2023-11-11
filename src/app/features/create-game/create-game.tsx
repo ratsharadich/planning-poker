@@ -19,7 +19,7 @@ export const CreateGame: FC<Props> = ({ show, onOpen }) => {
   return (
     <Fragment>
       {!show && (
-        <Button intent="primary" variant="l" onClick={onOpen}>
+        <Button variant="primary" dimension="l" onClick={onOpen}>
           <Typography.Body16_400>Создать</Typography.Body16_400>
         </Button>
       )}
@@ -43,7 +43,7 @@ export const CreateGame: FC<Props> = ({ show, onOpen }) => {
 
             <Button
               type="submit"
-              variant="l"
+              dimension="l"
               tw="w-full mt-2"
               disabled={!roomName || !userName}
             >
