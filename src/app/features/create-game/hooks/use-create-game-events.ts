@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useCallback } from 'react';
 import { addUserToStorage, createGuid, useReducerAsState } from 'shared';
 import { useNavigate } from 'react-router-dom';
+import { createUser, createRoom, getRoom } from 'shared/api/rest';
 
 export const useCreateGameEvents = () => {
   const [{ userName, roomName }, setState] = useReducerAsState({
@@ -23,13 +24,18 @@ export const useCreateGameEvents = () => {
   }, []);
 
   const handleSumbit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      addUserToStorage({ userName });
+      //TODO
 
-      const roomId = createGuid();
-      navigate(`/room/${roomId}`);
+      // addUserToStorage({ userName });
+
+      const userId = (await createUser({ userName })).data;
+      const roomId = (await createRoom({ roomName, userId })).data;
+      console.log((await getRoom({ roomId })).data);
+
+      // navigate(`/room/${roomId}`);
     },
     [userName, roomName],
   );
