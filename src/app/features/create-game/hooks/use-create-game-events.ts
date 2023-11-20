@@ -31,9 +31,9 @@ export const useCreateGameEvents = () => {
 
       // addUserToStorage({ userName });
 
-      const userId = (await createUser({ userName })).data;
-      const roomId = (await createRoom({ roomName, userId })).data;
-      console.log((await getRoom({ roomId })).data);
+      const userId = (await createUser({ userName })) || '';
+      const roomId = (await createRoom({ roomName, userId })) || '';
+      console.log(await getRoom({ roomId }));
 
       // navigate(`/room/${roomId}`);
     },
