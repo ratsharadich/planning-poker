@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { CardValue } from 'shared';
 import { Back, CardStyled, Face } from './styles';
 
 type Props = {
   shown: boolean;
-  value: CardValue;
+  value: string;
 };
 
 export const PokerCard: FC<Props> = ({ shown, value }) => {

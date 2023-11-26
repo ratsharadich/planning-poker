@@ -1,16 +1,11 @@
 import { PokerCard } from 'pages/room/entities';
 import { ReactNode } from 'react';
-import { CardList, CardValue } from 'shared';
+import { Card } from 'shared';
 
-type Args = { shown: boolean; cards: CardList };
+type Args = { shown: boolean; cards: Card[] };
 
 export const splitCards = ({ shown, cards }: Args) => {
-  const list = Object.entries(cards).map(([id, value]) => ({
-    id,
-    value,
-  }));
-
-  return list.reduce<
+  return cards.reduce<
     Record<'left' | 'top' | 'right' | 'bottom', Array<ReactNode>>
   >(
     (acc, curr, index) => {
@@ -47,7 +42,7 @@ function getCard({
   shown,
 }: {
   id: string;
-  value: CardValue;
+  value: string;
   shown: boolean;
 }) {
   return <PokerCard key={id} shown={shown} value={value} />;

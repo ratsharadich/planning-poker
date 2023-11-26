@@ -18,7 +18,7 @@ export const Estimation: FC<Props> = memo(
       if (socketRef.current) {
         updateCard({
           socket: socketRef.current,
-          value: assessment === cardValue ? '' : assessment,
+          value: assessment === cardValue ? '' : String(assessment),
           userId,
         });
       }

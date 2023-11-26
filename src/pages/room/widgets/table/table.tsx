@@ -1,23 +1,24 @@
 import { FC, MutableRefObject, useCallback } from 'react';
-import { Button, CardList, SocketActions } from 'shared';
+import { Button, Card, SocketActions } from 'shared';
 import tw, { styled } from 'twin.macro';
 import { splitCards } from './lib';
 import { Socket } from 'socket.io-client';
 
 type Props = {
   shown: boolean;
-  cards: CardList;
+  cards: Card[];
   socketRef: MutableRefObject<Socket | null>;
 };
 
 export const Table: FC<Props> = ({ socketRef, shown, cards }) => {
   const { left, top, right, bottom } = splitCards({ shown, cards });
 
-  const handleShowCards = useCallback(() => {
+  console.log(shown, 'shown');
+
+  const toggleShowCards = useCallback(() => {
     if (socketRef.current) {
-      SocketActions.setCardsShown({
+      SocketActions.toggleRoomShowState({
         socket: socketRef.current,
-        show: !shown,
       });
     }
   }, [shown]);
@@ -29,7 +30,7 @@ export const Table: FC<Props> = ({ socketRef, shown, cards }) => {
 
       <div tw="p-4 col-start-2 col-end-2">
         <TableStyled>
-          <Button dimension="l" variant="white" onClick={handleShowCards}>
+          <Button dimension="l" variant="white" onClick={toggleShowCards}>
             Показать карты
           </Button>
         </TableStyled>
@@ -53,7 +54,8 @@ const TableStyled = styled.div`
   ${tw`w-full min-w-[10rem] h-[13.375rem] md:h-[9.375rem]`}
 `;
 
-const Top = tw.div`col-start-2 row-start-1 flex justify-center items-center`;
-const Left = tw.div`col-start-1 row-start-2 flex justify-center items-center`;
-const Right = tw.div`col-start-3 row-start-2 flex justify-center items-center`;
-const Bottom = tw.div`col-start-2 row-start-3 flex justify-center items-center`;
+const Side = tw.div`flex justify-center items-center gap-8`;
+const Top = tw(Side)`col-start-2 row-start-1`;
+const Left = tw(Side)`col-start-1 row-start-2`;
+const Right = tw(Side)`col-start-3 row-start-2`;
+const Bottom = tw(Side)`col-start-2 row-start-3`;

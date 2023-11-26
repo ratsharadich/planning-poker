@@ -1,7 +1,7 @@
 import tw, { css, styled } from 'twin.macro';
 
 export const CardStyled = styled.article`
-  ${tw`w-10 h-[4.375rem] relative`}
+  ${tw`w-10 h-[4.375rem] relative shrink-0`}
   ${css`
     perspective: 150rem;
   `}

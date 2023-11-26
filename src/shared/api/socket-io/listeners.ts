@@ -1,29 +1,33 @@
 import { Socket } from 'socket.io-client';
-import { CardsState, LISTENERS, UserList } from './types';
-
-const listenUsers = ({
-  socket,
-  onUpdate,
-}: {
-  socket: Socket;
-  onUpdate: (users: UserList) => void;
-}) => {
-  socket.on(LISTENERS.LISTEN_USERS, (users: UserList) => onUpdate(users));
-};
+import { LISTENERS } from './types';
+import { Card } from 'shared/types';
 
 const listenCards = ({
   socket,
   onUpdate,
 }: {
   socket: Socket;
-  onUpdate: (cards: CardsState) => void;
+  onUpdate: (cards: Card[]) => void;
 }) => {
-  socket.on(LISTENERS.LISTEN_CARDS, (cards: CardsState) => {
+  socket.on(LISTENERS.CARDS, (cards: Card[]) => {
     onUpdate(cards);
   });
 };
 
+const listenRoomShowState = ({
+  socket,
+  onUpdate,
+}: {
+  socket: Socket;
+  onUpdate: (shown: boolean) => void;
+}) => {
+  socket.on(LISTENERS.SHOW_STATE, (shown: boolean) => {
+    console.log(shown, 'shown');
+    onUpdate(shown);
+  });
+};
+
 export const SocketListeners = {
-  listenUsers,
   listenCards,
+  listenRoomShowState,
 };

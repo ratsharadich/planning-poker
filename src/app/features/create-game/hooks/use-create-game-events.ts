@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useCallback } from 'react';
-import { addUserToStorage, createGuid, useReducerAsState } from 'shared';
+import { useReducerAsState } from 'shared';
 import { useNavigate } from 'react-router-dom';
-import { createUser, createRoom, getRoom } from 'shared/api/rest';
+import { createUser, createRoom } from 'shared/api/rest';
 
 export const useCreateGameEvents = () => {
   const [{ userName, roomName }, setState] = useReducerAsState({
@@ -27,15 +27,12 @@ export const useCreateGameEvents = () => {
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      //TODO
-
-      // addUserToStorage({ userName });
-
       createUser({ userName })
-        .then(userId => createRoom({ roomName, userId: userId || '' }))
-        .then(roomId => getRoom({ roomId: roomId || '' }));
-
-      // navigate(`/room/${roomId}`);
+        .then(userId => {
+          userId && localStorage.setItem('userId', userId);
+          return createRoom({ roomName, userId: userId || '' });
+        })
+        .then(roomId => navigate(`/room/${roomId}`));
     },
     [userName, roomName],
   );

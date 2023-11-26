@@ -1,5 +1,5 @@
 import { FC, useCallback, useState } from 'react';
-import { Page, Typography, useReducerAsState } from 'shared';
+import { Page, Typography } from 'shared';
 import { CreateGame } from './features';
 
 export const App: FC = () => {
