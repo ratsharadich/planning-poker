@@ -1,47 +1,36 @@
-import { ChangeEvent, FormEvent, useCallback } from 'react';
-import { useReducerAsState } from 'shared';
+import { useUnit } from 'effector-react';
+import {
+  $roomId,
+  $roomName,
+  $userName,
+  formSubmitted,
+  roomNameChanged,
+  userNameChanged,
+} from '../model';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createUser, createRoom } from 'shared/api/rest';
 
 export const useCreateGameEvents = () => {
-  const [{ userName, roomName }, setState] = useReducerAsState({
-    userName: '',
-    roomName: '',
-  });
+  const [userName, roomName, roomId] = useUnit([$userName, $roomName, $roomId]);
+  const [onUserNameChange, onRoomNameChange, onSubmit] = useUnit([
+    userNameChanged,
+    roomNameChanged,
+    formSubmitted,
+  ]);
 
   const navigate = useNavigate();
 
-  const handleRoomChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setState({
-      roomName: e.target.value.slice(0, 10).replace(/[^a-zA-Z0-9а-яА-Я]/g, ''),
-    });
-  }, []);
-
-  const handleNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setState({
-      userName: e.target.value.slice(0, 10).replace(/[^a-zA-Z0-9а-яА-Я]/g, ''),
-    });
-  }, []);
-
-  const handleSumbit = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      createUser({ userName })
-        .then(userId => {
-          userId && localStorage.setItem('userId', userId);
-          return createRoom({ roomName, userId: userId || '' });
-        })
-        .then(roomId => navigate(`/room/${roomId}`));
-    },
-    [userName, roomName],
-  );
+  useEffect(() => {
+    if (roomId) {
+      navigate(`/room/${roomId}`);
+    }
+  }, [roomId]);
 
   return {
-    roomName,
     userName,
-    handleRoomChange,
-    handleNameChange,
-    handleSumbit,
+    roomName,
+    onUserNameChange,
+    onRoomNameChange,
+    onSubmit,
   };
 };

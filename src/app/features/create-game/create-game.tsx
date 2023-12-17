@@ -1,6 +1,6 @@
-import { FC, Fragment } from 'react';
-import { useCreateGameEvents } from './hooks';
+import { FC, Fragment, useEffect } from 'react';
 import { Button, Input, Typography } from 'shared';
+import { useCreateGameEvents } from './hooks';
 
 type Props = {
   show: boolean;
@@ -8,13 +8,8 @@ type Props = {
 };
 
 export const CreateGame: FC<Props> = ({ show, onOpen }) => {
-  const {
-    roomName,
-    userName,
-    handleRoomChange,
-    handleNameChange,
-    handleSumbit,
-  } = useCreateGameEvents();
+  const { userName, roomName, onUserNameChange, onRoomNameChange, onSubmit } =
+    useCreateGameEvents();
 
   return (
     <Fragment>
@@ -26,19 +21,19 @@ export const CreateGame: FC<Props> = ({ show, onOpen }) => {
 
       {show && (
         <div tw="flex flex-col items-center gap-3">
-          <form tw="flex flex-col items-center gap-1" onSubmit={handleSumbit}>
+          <form tw="flex flex-col items-center gap-1" onSubmit={onSubmit}>
             <Input
               variant="l"
               label="Название игры"
               value={roomName}
-              onChange={handleRoomChange}
+              onChange={onRoomNameChange}
             />
 
             <Input
               variant="l"
               label="Ваше имя"
               value={userName}
-              onChange={handleNameChange}
+              onChange={onUserNameChange}
             />
 
             <Button

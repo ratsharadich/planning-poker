@@ -14,7 +14,7 @@ export const ErrorPage: FC = ({}) => {
   console.error(error);
 
   return (
-    <Page tw="flex justify-center items-center">
+    <Page tw="flex flex-col justify-center items-center">
       <Typography.H1>Такого адреса нет :\</Typography.H1>
       <Typography.Body14_400>
         {error.statusText || error.message}

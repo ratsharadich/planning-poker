@@ -3,12 +3,9 @@ import { Button, Input } from 'shared';
 import { CreateUserProps } from './types';
 import { useCreateUserEvents } from './hooks';
 
-export const CreateUser: FC<CreateUserProps> = ({
-  socketRef,
-  onUserCreated,
-}) => {
+export const CreateUser: FC<CreateUserProps> = ({ onUserCreated }) => {
   const { isLoading, userName, handleNameChange, handleCreateUser } =
-    useCreateUserEvents({ socketRef, onUserCreated });
+    useCreateUserEvents({ onUserCreated });
 
   return (
     <div tw="h-full w-full flex justify-center items-center">

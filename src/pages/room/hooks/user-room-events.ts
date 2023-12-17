@@ -1,26 +1,26 @@
-import axios, { AxiosError } from 'axios';
-import { MutableRefObject, useCallback, useEffect, useRef } from 'react';
+import { useUnit } from 'effector-react';
+import { $socket, socketSet } from 'app/model';
+import axios from 'axios';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
-  Room,
   SocketActions,
   SocketListeners,
   User,
   useReducerAsState,
 } from 'shared';
-import { createUser, getRoom } from 'shared/api/rest';
-import { Socket, io } from 'socket.io-client';
+import { getRoom } from 'shared/api/rest';
+import { io } from 'socket.io-client';
 
 type Args = {
   roomId: string;
-  socketRef: MutableRefObject<Socket | null>;
 };
 
-const { getCards, addUserToRoom, leave } = SocketActions;
+const { getCards, leave } = SocketActions;
 const { listenCards, listenRoomShowState } = SocketListeners;
 
-export const useRoomEvents = ({ socketRef, roomId }: Args) => {
+export const useRoomEvents = ({ roomId }: Args) => {
   const [state, setState] = useReducerAsState<{
     shown: boolean;
     user: User;
@@ -33,11 +33,13 @@ export const useRoomEvents = ({ socketRef, roomId }: Args) => {
     createUser: false,
   });
 
+  const [socket, setSocket] = useUnit([$socket, socketSet]);
+
   const navigate = useNavigate();
 
   const handleGetCards = useCallback(() => {
-    if (socketRef.current) {
-      getCards({ socket: socketRef.current });
+    if (socket) {
+      getCards({ socket });
     }
   }, []);
 
@@ -71,25 +73,12 @@ export const useRoomEvents = ({ socketRef, roomId }: Args) => {
         }
       })
       .finally(() => {
-        socketRef.current = io(process.env.BACK_URL || '', {
-          query: { roomId },
-        });
-
-        const socket = socketRef.current;
-
-        listenCards({
-          socket: socket,
-          onUpdate: cards => setState({ cards }),
-        });
-        listenRoomShowState({
-          socket: socket,
-          onUpdate: shown => setState({ shown }),
-        });
-
-        getCards({ socket });
+        setSocket(
+          io(process.env.BACK_URL || '', {
+            query: { roomId },
+          }),
+        );
       });
-
-    const socket = socketRef.current;
     return () => {
       if (socket && state.user.id) {
         socket.disconnect();
@@ -97,6 +86,21 @@ export const useRoomEvents = ({ socketRef, roomId }: Args) => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      listenCards({
+        socket,
+        onUpdate: cards => setState({ cards }),
+      });
+      listenRoomShowState({
+        socket,
+        onUpdate: shown => setState({ shown }),
+      });
+
+      getCards({ socket });
+    }
+  }, [socket]);
 
   return { state, handleGetCards, setState };
 };

@@ -9,10 +9,7 @@ import { CreateUser } from './features';
 export const Room: FC = () => {
   const { roomId } = useParams();
 
-  const socketRef = useRef<Socket | null>(null);
-
   const { state, handleGetCards, setState } = useRoomEvents({
-    socketRef,
     roomId: roomId || '',
   });
 
@@ -23,7 +20,6 @@ export const Room: FC = () => {
       {createUser && (
         <Page>
           <CreateUser
-            socketRef={socketRef}
             onUserCreated={({ userId, userName }) => {
               setState({
                 createUser: false,
@@ -51,10 +47,9 @@ export const Room: FC = () => {
             <button onClick={handleGetCards}>Обновить карты</button>
           </header>
 
-          <Table socketRef={socketRef} shown={shown} cards={cards} />
+          <Table shown={shown} cards={cards} />
 
           <Estimation
-            socketRef={socketRef}
             userId={user.id}
             cardValue={
               cards.find(({ userId }) => userId === user.id)?.value || ''

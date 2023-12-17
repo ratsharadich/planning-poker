@@ -1,27 +1,27 @@
-import { FC, MutableRefObject, useCallback } from 'react';
+import { FC, useCallback } from 'react';
 import { Button, Card, SocketActions } from 'shared';
 import tw, { styled } from 'twin.macro';
 import { splitCards } from './lib';
-import { Socket } from 'socket.io-client';
+import { useUnit } from 'effector-react';
+import { $socket } from 'app/model';
 
 type Props = {
   shown: boolean;
   cards: Card[];
-  socketRef: MutableRefObject<Socket | null>;
 };
 
-export const Table: FC<Props> = ({ socketRef, shown, cards }) => {
+export const Table: FC<Props> = ({ shown, cards }) => {
   const { left, top, right, bottom } = splitCards({ shown, cards });
 
-  console.log(shown, 'shown');
+  const socket = useUnit($socket);
 
   const toggleShowCards = useCallback(() => {
-    if (socketRef.current) {
+    if (socket) {
       SocketActions.toggleRoomShowState({
-        socket: socketRef.current,
+        socket,
       });
     }
-  }, [shown]);
+  }, [socket]);
 
   return (
     <Container>
