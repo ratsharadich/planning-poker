@@ -9,7 +9,7 @@ import { CreateUser } from './features';
 export const Room: FC = () => {
   const { roomId } = useParams();
 
-  const { state, handleGetCards, setState } = useRoomEvents({
+  const { state, handleGetCards } = useRoomEvents({
     roomId: roomId || '',
   });
 
@@ -19,14 +19,7 @@ export const Room: FC = () => {
     <Fragment>
       {createUser && (
         <Page>
-          <CreateUser
-            onUserCreated={({ userId, userName }) => {
-              setState({
-                createUser: false,
-                user: { id: userId, name: userName },
-              });
-            }}
-          />
+          <CreateUser />
         </Page>
       )}
 

@@ -1,11 +1,15 @@
 import { FC } from 'react';
 import { Button, Input } from 'shared';
-import { CreateUserProps } from './types';
-import { useCreateUserEvents } from './hooks';
+import { useUnit } from 'effector-react';
+import { $isLoading, formSubmitted } from './model';
+import { $userName, userNameChanged } from 'shared/model';
 
-export const CreateUser: FC<CreateUserProps> = ({ onUserCreated }) => {
-  const { isLoading, userName, handleNameChange, handleCreateUser } =
-    useCreateUserEvents({ onUserCreated });
+export const CreateUser: FC = () => {
+  const [isLoading, userName] = useUnit([$isLoading, $userName]);
+  const [onUserNameChange, onSubmit] = useUnit([
+    userNameChanged,
+    formSubmitted,
+  ]);
 
   return (
     <div tw="h-full w-full flex justify-center items-center">
@@ -13,15 +17,12 @@ export const CreateUser: FC<CreateUserProps> = ({ onUserCreated }) => {
 
       {!isLoading && (
         <div tw="flex flex-col items-center gap-3">
-          <form
-            tw="flex flex-col items-center gap-1"
-            onSubmit={handleCreateUser}
-          >
+          <form tw="flex flex-col items-center gap-1" onSubmit={onSubmit}>
             <Input
               variant="l"
               label="Ваше имя"
               value={userName}
-              onChange={handleNameChange}
+              onChange={onUserNameChange}
             />
 
             <Button

@@ -3,7 +3,7 @@ import { Button, Card, SocketActions } from 'shared';
 import tw, { styled } from 'twin.macro';
 import { splitCards } from './lib';
 import { useUnit } from 'effector-react';
-import { $socket } from 'app/model';
+import { $socket } from 'shared/model';
 
 type Props = {
   shown: boolean;

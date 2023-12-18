@@ -1,1 +1,2 @@
-export * from './createGuid';
+export * from './create-guid';
+export * from './get-valid-name';

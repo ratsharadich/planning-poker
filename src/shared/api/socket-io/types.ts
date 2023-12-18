@@ -1,3 +1,5 @@
+import { Socket } from 'socket.io-client';
+
 export enum ACTIONS {
   GET_CARDS = 'cards:get',
   GET_SHOW_STATE = 'show-state:get',

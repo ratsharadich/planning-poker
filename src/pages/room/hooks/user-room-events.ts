@@ -1,5 +1,4 @@
 import { useUnit } from 'effector-react';
-import { $socket, socketSet } from 'app/model';
 import axios from 'axios';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +11,7 @@ import {
 } from 'shared';
 import { getRoom } from 'shared/api/rest';
 import { io } from 'socket.io-client';
+import { $socket, socketSet } from 'shared/model';
 
 type Args = {
   roomId: string;
@@ -20,6 +20,7 @@ type Args = {
 const { getCards, leave } = SocketActions;
 const { listenCards, listenRoomShowState } = SocketListeners;
 
+// TODO
 export const useRoomEvents = ({ roomId }: Args) => {
   const [state, setState] = useReducerAsState<{
     shown: boolean;
@@ -30,6 +31,7 @@ export const useRoomEvents = ({ roomId }: Args) => {
     shown: false,
     user: { id: localStorage.getItem('userId') || '', name: '' },
     cards: [],
+    // TODO: move to store
     createUser: false,
   });
 

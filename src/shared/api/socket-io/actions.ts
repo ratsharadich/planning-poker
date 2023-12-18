@@ -20,18 +20,6 @@ const updateCard = ({
   });
 };
 
-const addUserToRoom = ({
-  socket,
-  userId,
-}: {
-  socket: Socket;
-  userId: string;
-}) => {
-  socket.emit(ACTIONS.ADD_USER_TO_ROOM, {
-    userId,
-  });
-};
-
 const toggleRoomShowState = ({ socket }: { socket: Socket }) => {
   socket.emit(ACTIONS.TOGGLE_ROOM_SHOW_STATE);
 };
@@ -43,7 +31,6 @@ const leave = ({ socket, userId }: { socket: Socket; userId: string }) => {
 export const SocketActions = {
   getCards,
   updateCard,
-  addUserToRoom,
   toggleRoomShowState,
   leave,
 };

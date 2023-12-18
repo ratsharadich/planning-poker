@@ -3,7 +3,7 @@ import { FC, memo } from 'react';
 import { SocketActions } from 'shared';
 import { fibonacci } from './constants';
 import { useUnit } from 'effector-react';
-import { $socket } from 'app/model';
+import { $socket } from 'shared/model';
 
 type Props = {
   userId: string;
