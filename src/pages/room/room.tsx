@@ -1,29 +1,32 @@
-import { FC, Fragment, useRef } from 'react';
+import { FC, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
-import { Page, SocketActions, Typography } from 'shared';
-import { Socket } from 'socket.io-client';
+import { Page, Typography } from 'shared';
 import { useRoomEvents } from './hooks';
 import { Estimation, Table } from './widgets';
 import { CreateUser } from './features';
+import { useGate } from 'effector-react';
+import { RoomGate } from './model';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
 
-  const { state, handleGetCards } = useRoomEvents({
+  const { state, createUserForm, handleGetCards } = useRoomEvents({
     roomId: roomId || '',
   });
 
-  const { shown, user, cards, createUser } = state;
+  useGate(RoomGate, { roomId: roomId || '' });
+
+  const { shown, user, cards } = state;
 
   return (
     <Fragment>
-      {createUser && (
+      {createUserForm && (
         <Page>
           <CreateUser />
         </Page>
       )}
 
-      {!createUser && (
+      {!createUserForm && (
         <Page tw="grid grid-rows-[auto,1fr,auto] grid-cols-1 justify-items-center items-center">
           <header tw="mb-auto">
             <Typography.H2>userId: {user.id}</Typography.H2>

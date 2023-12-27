@@ -1,6 +1,7 @@
 import { Socket } from 'socket.io-client';
 import { ACTIONS } from './types';
 
+// TODO: move to socket model
 const getCards = ({ socket }: { socket: Socket }) => {
   socket.emit(ACTIONS.GET_CARDS);
 };

@@ -12,7 +12,9 @@ export const $roomId = createStore('');
 // events
 export const userNameChanged = createEvent<ChangeEvent<HTMLInputElement>>();
 export const roomNameChanged = createEvent<ChangeEvent<HTMLInputElement>>();
+export const roomIdChanged = createEvent<string>();
 
 // handlers
 $userName.on(userNameChanged, (_, e) => getValidName(e.target.value));
 $roomName.on(roomNameChanged, (_, e) => getValidName(e.target.value));
+$roomId.on(roomIdChanged, (_, id) => id);

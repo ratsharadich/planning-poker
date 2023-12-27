@@ -12,7 +12,7 @@ export const socketSet = createEvent<Socket>();
 $socket.on(socketSet, (_, socket) => socket);
 
 // effects
-export const addUserToRoom = createEffect<
+export const addUserToRoomFx = createEffect<
   ({}: { socket: Socket; userId: string }) => void
 >(({ socket, userId }) => {
   socket.emit(ACTIONS.ADD_USER_TO_ROOM, {
@@ -20,5 +20,8 @@ export const addUserToRoom = createEffect<
   });
 });
 
-// side effects
+// wathcers
 $socket.watch(socket => console.log('socket', socket));
+addUserToRoomFx.watch(({ socket, userId }) =>
+  console.log({ socketFX: socket, userIdFx: userId }),
+);

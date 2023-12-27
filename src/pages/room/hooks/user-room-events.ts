@@ -11,7 +11,8 @@ import {
 } from 'shared';
 import { getRoom } from 'shared/api/rest';
 import { io } from 'socket.io-client';
-import { $socket, socketSet } from 'shared/model';
+import { $socket, socketSet, $userId } from 'shared/model';
+import { $createUserForm, createUserFormSwitched } from '../features';
 
 type Args = {
   roomId: string;
@@ -20,22 +21,21 @@ type Args = {
 const { getCards, leave } = SocketActions;
 const { listenCards, listenRoomShowState } = SocketListeners;
 
-// TODO
+// TODO: move to model
 export const useRoomEvents = ({ roomId }: Args) => {
   const [state, setState] = useReducerAsState<{
     shown: boolean;
     user: User;
     cards: Card[];
-    createUser: boolean;
   }>({
     shown: false,
     user: { id: localStorage.getItem('userId') || '', name: '' },
     cards: [],
-    // TODO: move to store
-    createUser: false,
   });
 
   const [socket, setSocket] = useUnit([$socket, socketSet]);
+  const [createUserForm, userId] = useUnit([$createUserForm, $userId]);
+  const [onCreateUserFormSwitch] = useUnit([createUserFormSwitched]);
 
   const navigate = useNavigate();
 
@@ -49,7 +49,7 @@ export const useRoomEvents = ({ roomId }: Args) => {
     getRoom({ roomId })
       .then(room => {
         if (room) {
-          const userInRoom = room.users?.find(({ id }) => id === state.user.id);
+          const userInRoom = room.users?.find(({ id }) => id === userId);
 
           if (!userInRoom) {
             throw new Error('User is not found!');
@@ -70,7 +70,7 @@ export const useRoomEvents = ({ roomId }: Args) => {
 
         if (error instanceof Error) {
           if (error.message === 'User is not found!') {
-            setState({ createUser: true });
+            onCreateUserFormSwitch(true);
           }
         }
       })
@@ -104,5 +104,5 @@ export const useRoomEvents = ({ roomId }: Args) => {
     }
   }, [socket]);
 
-  return { state, handleGetCards, setState };
+  return { state, createUserForm, handleGetCards, setState };
 };
