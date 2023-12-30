@@ -12,6 +12,7 @@ module.exports = function webpackConfig(env, args) {
     },
     resolve: {
       alias: {
+        src: path.resolve(__dirname, 'src'),
         app: path.resolve(__dirname, 'src/app'),
         pages: path.resolve(__dirname, 'src/pages'),
         processes: path.resolve(__dirname, 'src/processes'),

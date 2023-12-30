@@ -18,6 +18,8 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "atomic-router": "^0.9.3",
+    "atomic-router-react": "^0.9.1",
     "axios": "^1.6.0",
     "effector": "^23.1.0",
     "effector-react": "^23.1.0",

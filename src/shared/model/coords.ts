@@ -4,7 +4,7 @@ import { getValidName } from 'shared/lib';
 
 // stores
 export const $userName = createStore('');
-export const $userId = createStore(localStorage.getItem('userId'));
+export const $userId = createStore(localStorage.getItem('userId') || '');
 
 export const $roomName = createStore('');
 export const $roomId = createStore('');

@@ -1,12 +1,6 @@
-import {
-  combine,
-  createEffect,
-  createEvent,
-  createStore,
-  sample,
-} from 'effector';
+import { createEffect, createEvent, createStore, sample } from 'effector';
 import { FormEvent } from 'react';
-import { createUser } from 'shared';
+import { NonNullableObject, createUser } from 'shared';
 import { $socket, $userId, $userName, addUserToRoomFx } from 'shared/model';
 import { Socket } from 'socket.io-client';
 
@@ -20,7 +14,7 @@ export const createUserFormSwitched = createEvent<boolean>();
 
 // effects
 export const createUserFx = createEffect(createUser);
-export const setUserIdFx = createEffect<(userId: string) => void>(userId =>
+const setUserIdFx = createEffect<(userId: string) => void>(userId =>
   localStorage.setItem('userId', userId),
 );
 
@@ -30,40 +24,32 @@ $createUserForm.on(createUserFormSwitched, (_, status) => status);
 
 sample({
   clock: formSubmitted,
-  source: $userName,
-  fn: userName => ({ userName }),
+  source: { userName: $userName },
   target: createUserFx,
 });
 
 sample({
   clock: createUserFx.doneData,
   filter: (userId): userId is string => Boolean(userId),
-  target: $userId,
+  target: [setUserIdFx, $userId],
 });
 
 sample({
-  clock: createUserFx.doneData,
-  filter: (userId): userId is string => Boolean(userId),
-  target: setUserIdFx,
-});
-
-sample({
-  clock: setUserIdFx.done,
-  source: combine($userId, $socket, (userId, socket) => ({ userId, socket })),
-  filter: (args): args is { userId: string; socket: Socket } =>
+  clock: [setUserIdFx.done, $userId],
+  source: { userId: $userId, socket: $socket },
+  filter: (args): args is NonNullableObject<typeof args> =>
     Boolean(args.userId && args.socket),
   target: addUserToRoomFx,
 });
 
 sample({
   clock: addUserToRoomFx.done,
-  fn: () => false,
-  target: createUserFormSwitched,
+  target: createUserFormSwitched.prepend(() => false),
 });
 
 // side effects
 formSubmitted.watch(e => e.preventDefault());
 
 // watchers
-$userId.watch(userId => console.log({ userId }, 'userId'));
-setUserIdFx.watch(userId => console.log('setUserId', { setUserId: userId }));
+// $userId.watch(userId => console.log({ userId }, 'userId'));
+// setUserIdFx.watch(userId => console.log('setUserId', { setUserId: userId }));

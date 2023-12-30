@@ -17,6 +17,9 @@
     "esModuleInterop": true,
     "jsxImportSource": "@emotion/react", // Add the css prop
     "paths": {
+      "src": ["."],
+      "src/*": ["./*"],
+
       "app": ["./app"],
       "app/*": ["./app/*"],
 
