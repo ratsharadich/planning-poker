@@ -2,11 +2,7 @@ import { AxiosResponse } from 'axios';
 import { api } from './constants';
 import { Room } from 'shared';
 
-export const getRoom = async ({
-  roomId,
-}: {
-  roomId: string;
-}): Promise<Room> => {
+export const getRoom = async (roomId: string): Promise<Room> => {
   const response: AxiosResponse<{ data: Room }> = await api.get(
     `/room/${roomId}`,
   );

@@ -1,22 +1,8 @@
-import { App } from 'app';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { ErrorPage } from 'shared';
+import { RouterProvider } from 'react-router-dom';
 import './styles.css';
-import { Room } from 'pages';
-
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: 'room/:roomId',
-    element: <Room />,
-  },
-]);
+import { router } from './router';
 
 const container = document.getElementById('root');
 const root = createRoot(container!);

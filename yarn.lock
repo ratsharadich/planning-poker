@@ -1114,20 +1114,6 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
-atomic-router-react@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/atomic-router-react/-/atomic-router-react-0.9.1.tgz#5a2cc0c3df1f1cbc0e6b21a71e1fa42d388c6056"
-  integrity sha512-22oJu2LUG8Z4HXmrlrSOFzUtna6iC3tYOT93/IRKq+Kqz6MuQmnvbcTlHOZ55c59WEJEng80nj8Dewa8ncSf4g==
-  dependencies:
-    clsx "^1.1.1"
-
-atomic-router@^0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/atomic-router/-/atomic-router-0.9.3.tgz#7c460b56aa523312c56433d8580b4e32cd0a0b1c"
-  integrity sha512-GJDL61CpxTG/NUIHkvdmMO9i37p3nL6c8quA6vlX1n4tQ7KaNWs48FFf3KcKOblnMRzcf4+DEDtEs2DLA8wF6g==
-  dependencies:
-    path-to-regexp "^6.2.0"
-
 autoprefixer@^10.4.16:
   version "10.4.16"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.4.16.tgz#fad1411024d8670880bdece3970aa72e3572feb8"
@@ -1412,11 +1398,6 @@ clone-deep@^4.0.1:
     is-plain-object "^2.0.4"
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
-
-clsx@^1.1.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
-  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -3547,11 +3528,6 @@ path-to-regexp@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
   integrity sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==
-
-path-to-regexp@^6.2.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-6.2.1.tgz#d54934d6798eb9e5ef14e7af7962c945906918e5"
-  integrity sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==
 
 path-type@^4.0.0:
   version "4.0.0"

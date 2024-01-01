@@ -10,7 +10,7 @@ import { RoomGate } from './model';
 export const Room: FC = () => {
   const { roomId } = useParams();
 
-  const { state, createUserForm, handleGetCards } = useRoomEvents({
+  const { state, createUserForm } = useRoomEvents({
     roomId: roomId || '',
   });
 
@@ -40,7 +40,7 @@ export const Room: FC = () => {
               </div>
             ))}
 
-            <button onClick={handleGetCards}>Обновить карты</button>
+            {/* <button onClick={handleGetCards}>Обновить карты</button> */}
           </header>
 
           <Table shown={shown} cards={cards} />

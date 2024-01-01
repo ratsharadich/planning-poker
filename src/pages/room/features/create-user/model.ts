@@ -2,7 +2,6 @@ import { createEffect, createEvent, createStore, sample } from 'effector';
 import { FormEvent } from 'react';
 import { NonNullableObject, createUser } from 'shared';
 import { $socket, $userId, $userName, addUserToRoomFx } from 'shared/model';
-import { Socket } from 'socket.io-client';
 
 // stores
 export const $isLoading = createStore(false);

@@ -1,6 +1,13 @@
-import { FC, Fragment, useEffect } from 'react';
+import { FC, Fragment } from 'react';
 import { Button, Input, Typography } from 'shared';
-import { useCreateGameEvents } from './hooks';
+import { useUnit } from 'effector-react';
+import {
+  $roomName,
+  $userName,
+  roomNameChanged,
+  userNameChanged,
+} from 'src/shared/model';
+import { formSubmitted } from './model';
 
 type Props = {
   show: boolean;
@@ -8,8 +15,12 @@ type Props = {
 };
 
 export const CreateGame: FC<Props> = ({ show, onOpen }) => {
-  const { userName, roomName, onUserNameChange, onRoomNameChange, onSubmit } =
-    useCreateGameEvents();
+  const [userName, roomName] = useUnit([$userName, $roomName]);
+  const [onUserNameChange, onRoomNameChange, onSubmit] = useUnit([
+    userNameChanged,
+    roomNameChanged,
+    formSubmitted,
+  ]);
 
   return (
     <Fragment>
