@@ -1,23 +1,29 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { createGate } from 'effector-react';
-import { Socket, io } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 
-import { createUserFormSwitched } from './features';
+import { $createUserForm, createUserFormSwitched } from './features';
 import {
-  $roomId,
   $socket,
   $userId,
   $userName,
   Card,
   Room,
+  cardsShowStateSwitched,
+  cardsUpdated,
   getCardsFx,
   getRoom,
   gotToMainPageFx,
   leaveFx,
+  listenCardsFx,
+  listenCardsShowStateFx,
+  setSocketFx,
+  setUserIdFx,
+  userIdChanged,
 } from 'src/shared';
 
 // gates
-export const RoomGate = createGate<{ roomId: string }>();
+export const RoomGate = createGate<{ roomId: string; userId: string }>();
 
 // stores
 export const $isLoading = createStore(false);
@@ -26,13 +32,14 @@ export const $cards = createStore<Card[]>([]);
 
 // events
 export const cardsGotten = createEvent();
-export const cardsUpdated = createEvent<Card[]>();
 
 // effects
 export const getRoomFx = createEffect((roomId: string) => getRoom(roomId));
-export const checkUserInRomFx = createEffect(
+export const checkUserInRoomFx = createEffect(
   ({ room, userId }: { room: Room; userId: string }) => {
     const userInRoom = room.users?.find(({ id }) => id === userId);
+
+    console.log(userInRoom, 'userInRoom');
 
     if (!userInRoom) {
       throw new Error('User is not found!');
@@ -44,17 +51,13 @@ export const checkUserInRomFx = createEffect(
     };
   },
 );
-export const setSocketFx = createEffect((roomId: string) => {
-  io(process.env.BACK_URL || '', {
-    query: { roomId },
-  });
-});
 
 // handlers
 $isLoading.on(getRoomFx.pending, (_, pending) => pending);
-$userName.on(checkUserInRomFx.doneData, (_, { name }) => name);
-$cards.on(checkUserInRomFx.doneData, (_, { cards }) => cards);
+$userName.on(checkUserInRoomFx.doneData, (_, { name }) => name);
+$cards.on(checkUserInRoomFx.doneData, (_, { cards }) => cards);
 $cards.on(cardsUpdated, (_, cards) => cards);
+$cardsShown.on(cardsShowStateSwitched, (_, shown) => shown);
 
 sample({
   clock: cardsGotten,
@@ -65,20 +68,21 @@ sample({
 
 sample({
   clock: RoomGate.open,
-  source: $roomId,
-  target: getRoomFx,
+  fn: ({ roomId }) => roomId,
+  target: [getRoomFx, setSocketFx],
 });
 
-// TODO: как пробросить апдейт карточек?
-// sample({
-//   clock: RoomGate.open,
-//   source: { socket: $socket, onUpdate: cardsUpdated },
-//   target: listenCardsFx,
-// });
+sample({
+  clock: RoomGate.open,
+  fn: ({ userId }) => userId,
+  target: [setUserIdFx, userIdChanged],
+});
 
 sample({
   clock: getRoomFx.doneData,
-  filter: room => Boolean(room),
+  source: $userId,
+  fn: (userId, room) => ({ userId, room }),
+  target: checkUserInRoomFx,
 });
 
 sample({
@@ -88,15 +92,16 @@ sample({
 });
 
 sample({
-  clock: getRoomFx.finally,
-  source: $roomId,
-  target: setSocketFx,
+  clock: checkUserInRoomFx.failData,
+  filter: error => error.message === 'User is not found!',
+  target: createUserFormSwitched.prepend(() => true),
 });
 
 sample({
-  clock: checkUserInRomFx.failData,
-  filter: error => error.message === 'User is not found!',
-  target: createUserFormSwitched.prepend(() => true),
+  clock: checkUserInRoomFx.finally,
+  source: $socket,
+  filter: (socket): socket is Socket => Boolean(socket),
+  target: [listenCardsFx, listenCardsShowStateFx],
 });
 
 sample({
@@ -109,3 +114,7 @@ sample({
 
 // wathcers
 // RoomGate.open.watch(props => console.log(props));
+// getRoomFx.watch(getRoomFx => console.log({ getRoomFx }));
+checkUserInRoomFx.watch(checkUserInRomFx => console.log({ checkUserInRomFx }));
+// $userId.watch(userId => console.log(userId));
+$cards.watch(cards => console.log({ cards }));

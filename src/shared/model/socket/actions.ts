@@ -3,10 +3,11 @@ import { Socket } from 'socket.io-client';
 import { ACTIONS } from 'src/shared';
 
 export const addUserToRoomFx = createEffect(
-  ({ socket, userId }: { socket: Socket; userId: string }) => {
-    socket.emit(ACTIONS.ADD_USER_TO_ROOM, {
-      userId,
-    });
+  ({ socket, userId }: { socket: Socket | null; userId?: string }) => {
+    if (socket && userId)
+      socket.emit(ACTIONS.ADD_USER_TO_ROOM, {
+        userId,
+      });
   },
 );
 

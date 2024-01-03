@@ -1,7 +1,13 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { FormEvent } from 'react';
-import { NonNullableObject, createUser } from 'shared';
-import { $socket, $userId, $userName, addUserToRoomFx } from 'shared/model';
+import { createUser } from 'shared';
+import {
+  $socket,
+  $userName,
+  addUserToRoomFx,
+  setUserIdFx,
+  userIdChanged,
+} from 'shared/model';
 
 // stores
 export const $isLoading = createStore(false);
@@ -13,9 +19,6 @@ export const createUserFormSwitched = createEvent<boolean>();
 
 // effects
 export const createUserFx = createEffect(createUser);
-const setUserIdFx = createEffect<(userId: string) => void>(userId =>
-  localStorage.setItem('userId', userId),
-);
 
 // handlers
 $isLoading.on(createUserFx.pending, (_, pending) => pending);
@@ -30,14 +33,14 @@ sample({
 sample({
   clock: createUserFx.doneData,
   filter: (userId): userId is string => Boolean(userId),
-  target: [setUserIdFx, $userId],
+  target: [setUserIdFx, userIdChanged],
 });
 
 sample({
-  clock: [setUserIdFx.done, $userId],
-  source: { userId: $userId, socket: $socket },
-  filter: (args): args is NonNullableObject<typeof args> =>
-    Boolean(args.userId && args.socket),
+  clock: createUserFx.doneData,
+  source: $socket,
+  filter: (socket, userId) => Boolean(socket && userId),
+  fn: (socket, userId) => ({ socket, userId }),
   target: addUserToRoomFx,
 });
 
@@ -52,3 +55,4 @@ formSubmitted.watch(e => e.preventDefault());
 // watchers
 // $userId.watch(userId => console.log({ userId }, 'userId'));
 // setUserIdFx.watch(userId => console.log('setUserId', { setUserId: userId }));
+addUserToRoomFx.watch(addUserToRoomFx => console.log({ addUserToRoomFx }));

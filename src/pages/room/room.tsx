@@ -1,22 +1,35 @@
 import { FC, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
-import { Page, Typography } from 'shared';
-import { useRoomEvents } from './hooks';
+import { $roomName, $userId, $userName, Page, Typography } from 'shared';
 import { Estimation, Table } from './widgets';
-import { CreateUser } from './features';
-import { useGate } from 'effector-react';
-import { RoomGate } from './model';
+import { $createUserForm, CreateUser } from './features';
+import { useGate, useUnit } from 'effector-react';
+import { $cards, $cardsShown, RoomGate, cardsGotten } from './model';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
+  const userId = localStorage.getItem('userId') || '';
 
-  const { state, createUserForm } = useRoomEvents({
+  const [
+    createUserForm,
+    userName,
+    roomName,
+    cards,
+    cardsShown,
+    handleGetCards,
+  ] = useUnit([
+    $createUserForm,
+    $userName,
+    $roomName,
+    $cards,
+    $cardsShown,
+    cardsGotten,
+  ]);
+
+  useGate(RoomGate, {
     roomId: roomId || '',
+    userId,
   });
-
-  useGate(RoomGate, { roomId: roomId || '' });
-
-  const { shown, user, cards } = state;
 
   return (
     <Fragment>
@@ -29,9 +42,9 @@ export const Room: FC = () => {
       {!createUserForm && (
         <Page tw="grid grid-rows-[auto,1fr,auto] grid-cols-1 justify-items-center items-center">
           <header tw="mb-auto">
-            <Typography.H2>userId: {user.id}</Typography.H2>
-            <Typography.H2>userName: {user.name}</Typography.H2>
-            {/* <Typography.H2>roomName: {roomName}</Typography.H2> */}
+            <Typography.H2>userId: {userId}</Typography.H2>
+            <Typography.H2>userName: {userName}</Typography.H2>
+            <Typography.H2>roomName: {roomName}</Typography.H2>
 
             <Typography.H2>Юзеры</Typography.H2>
             {cards.map(({ id }) => (
@@ -40,16 +53,14 @@ export const Room: FC = () => {
               </div>
             ))}
 
-            {/* <button onClick={handleGetCards}>Обновить карты</button> */}
+            <button onClick={handleGetCards}>Обновить карты</button>
           </header>
 
-          <Table shown={shown} cards={cards} />
+          <Table shown={cardsShown} cards={cards} />
 
           <Estimation
-            userId={user.id}
-            cardValue={
-              cards.find(({ userId }) => userId === user.id)?.value || ''
-            }
+            userId={userId}
+            cardValue={cards.find(user => user.userId === userId)?.value || ''}
           />
         </Page>
       )}
