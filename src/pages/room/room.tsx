@@ -5,17 +5,17 @@ import { useGate, useUnit } from 'effector-react';
 import { $roomName, $userName } from 'shared/model/coords';
 import { Page, Typography } from 'shared/ui';
 import { CreateUser, $createUserForm } from './features/create-user';
-import { $cards, RoomGate } from './model';
+import { $userCardValue, RoomGate } from './model';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
   const userId = localStorage.getItem('userId') || '';
 
-  const [createUserForm, userName, roomName, cards] = useUnit([
+  const [createUserForm, userName, roomName, userCardValue] = useUnit([
     $createUserForm,
     $userName,
     $roomName,
-    $cards,
+    $userCardValue,
   ]);
 
   useGate(RoomGate, {
@@ -39,12 +39,9 @@ export const Room: FC = () => {
             <Typography.H2>roomName: {roomName}</Typography.H2>
           </header>
 
-          <Table cards={cards} />
+          <Table />
 
-          <Estimation
-            userId={userId}
-            cardValue={cards.find(user => user.userId === userId)?.value || ''}
-          />
+          <Estimation userId={userId} cardValue={userCardValue} />
         </Page>
       )}
     </Fragment>

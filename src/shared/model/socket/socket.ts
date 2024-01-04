@@ -1,4 +1,5 @@
 import { createEffect, createStore } from 'effector';
+import { debug } from 'patronum';
 import { Socket, io } from 'socket.io-client';
 
 // stores
@@ -14,5 +15,4 @@ export const setSocketFx = createEffect((roomId: string) => {
 // handlers
 $socket.on(setSocketFx.doneData, (_, socket) => socket);
 
-// wathcers
-$socket.watch(socket => console.log('socket', socket));
+debug({ $socket });

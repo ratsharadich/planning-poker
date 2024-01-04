@@ -3,9 +3,8 @@ import {
   $userId,
   $userName,
   setUserIdFx,
-  userIdChanged,
 } from 'shared/model/coords';
-import { $cards, $cardsShown, $isLoading, $users } from './stores';
+import { $cards, $areCardsUncovered, $users, $userCardValue } from './stores';
 import { checkUserInRoomFx, getRoomFx } from './effects';
 import {
   $socket,
@@ -19,36 +18,50 @@ import {
 import { sample } from 'effector';
 import { RoomGate } from './gates';
 import { gotToMainPageFx } from 'shared/model/router';
-import { createUserFormSwitched } from '../features/create-user';
+import { $createUserForm } from '../features/create-user';
 import { Socket } from 'socket.io-client';
 
-$isLoading.on(getRoomFx.pending, (_, pending) => pending);
-$cardsShown.on(getRoomFx.doneData, (_, { showed }) => showed);
-$roomName.on(getRoomFx.doneData, (_, { name }) => name);
-$users.on(getRoomFx.doneData, (_, { users }) => users);
+import { spread } from 'patronum';
 
-$cardsShown.on(cardsShowStateSwitched, (_, shown) => shown);
+$areCardsUncovered.on(cardsShowStateSwitched, (_, shown) => shown);
 $userName.on(checkUserInRoomFx.doneData, (_, { name }) => name);
 $cards.on(checkUserInRoomFx.doneData, (_, { cards }) => cards);
 $cards.on(cardsUpdated, (_, cards) => cards);
 
 sample({
   clock: RoomGate.open,
-  fn: ({ roomId }) => roomId,
-  target: [getRoomFx, setSocketFx],
-});
-
-sample({
-  clock: RoomGate.open,
-  fn: ({ userId }) => userId,
-  target: [setUserIdFx, userIdChanged],
+  fn: ({ roomId, userId }) => ({
+    getRoom: roomId,
+    setSocket: roomId,
+    setUserId: userId,
+    changeUserId: userId,
+  }),
+  target: spread({
+    getRoom: getRoomFx,
+    setSocket: setSocketFx,
+    setUserId: setUserIdFx,
+    changeUserId: $userId,
+  }),
 });
 
 sample({
   clock: getRoomFx.doneData,
   source: $userId,
-  fn: (userId, room) => ({ userId, room }),
-  target: checkUserInRoomFx,
+  fn: (userId, room) => ({
+    showed: room.showed,
+    name: room.name,
+    users: room.users,
+    checkUser: {
+      userId,
+      room,
+    },
+  }),
+  target: spread({
+    showed: $areCardsUncovered,
+    name: $roomName,
+    users: $users,
+    checkUser: checkUserInRoomFx,
+  }),
 });
 
 sample({
@@ -60,7 +73,8 @@ sample({
 sample({
   clock: checkUserInRoomFx.failData,
   filter: error => error.message === 'User is not found!',
-  target: createUserFormSwitched.prepend(() => true),
+  fn: () => true,
+  target: $createUserForm,
 });
 
 sample({
@@ -68,6 +82,14 @@ sample({
   source: $socket,
   filter: (socket): socket is Socket => Boolean(socket),
   target: [listenCardsFx, listenCardsShowStateFx],
+});
+
+sample({
+  clock: $cards,
+  source: $userId,
+  fn: (userId, cards) =>
+    cards.find(user => user.userId === userId)?.value || '',
+  target: $userCardValue,
 });
 
 sample({

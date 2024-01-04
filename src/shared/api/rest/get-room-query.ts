@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { api } from './constants';
-import { Room } from 'shared';
+import { Room } from 'shared/types';
 
 export const getRoom = async (roomId: string): Promise<Room> => {
   const response: AxiosResponse<{ data: Room }> = await api.get(

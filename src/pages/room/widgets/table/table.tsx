@@ -1,29 +1,18 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import tw, { styled } from 'twin.macro';
-import { splitCards } from './lib';
-import { useUnit } from 'effector-react';
-import { Card } from 'shared/types';
-import { $socket, toggleRoomShowStateFx } from 'shared/model/socket';
+import { useGate, useUnit } from 'effector-react';
 import { Button } from 'shared/ui';
-import { $cardsShown } from '../../model';
+import { $splittedCards, TableGate, cardsUncovered } from './model';
 
-type Props = {
-  cards: Card[];
-};
-
-export const Table: FC<Props> = ({ cards }) => {
-  const [socket, shown, toggleShown] = useUnit([
-    $socket,
-    $cardsShown,
-    toggleRoomShowStateFx,
+export const Table: FC = () => {
+  const [splittedCards, uncoverCards] = useUnit([
+    $splittedCards,
+    cardsUncovered,
   ]);
 
-  const { left, top, right, bottom } = splitCards({ shown, cards });
+  const { left, top, right, bottom } = splittedCards;
 
-  const toggleShowCards = useCallback(
-    () => socket && toggleShown(socket),
-    [socket],
-  );
+  useGate(TableGate);
 
   return (
     <Container>
@@ -32,7 +21,7 @@ export const Table: FC<Props> = ({ cards }) => {
 
       <div tw="p-4 col-start-2 col-end-2">
         <TableStyled>
-          <Button dimension="l" variant="white" onClick={toggleShowCards}>
+          <Button dimension="l" variant="white" onClick={uncoverCards}>
             Показать карты
           </Button>
         </TableStyled>

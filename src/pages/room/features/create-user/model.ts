@@ -1,7 +1,7 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { FormEvent } from 'react';
 import { createUser } from 'shared/api';
-import { $userName, setUserIdFx, userIdChanged } from 'shared/model/coords';
+import { $userId, $userName, setUserIdFx } from 'shared/model/coords';
 import { $socket, addUserToRoomFx } from 'shared/model/socket';
 
 // stores
@@ -10,15 +10,12 @@ export const $createUserForm = createStore(false);
 
 // events
 export const formSubmitted = createEvent<FormEvent<HTMLFormElement>>();
-export const createUserFormSwitched = createEvent<boolean>();
 
 // effects
 export const createUserFx = createEffect(createUser);
 
 // handlers
-$isLoading.on(createUserFx.pending, (_, pending) => pending);
-$createUserForm.on(createUserFormSwitched, (_, status) => status);
-
+formSubmitted.watch(e => e.preventDefault());
 sample({
   clock: formSubmitted,
   source: { userName: $userName },
@@ -28,7 +25,7 @@ sample({
 sample({
   clock: createUserFx.doneData,
   filter: (userId): userId is string => Boolean(userId),
-  target: [setUserIdFx, userIdChanged],
+  target: [setUserIdFx, $userId],
 });
 
 sample({
@@ -41,8 +38,6 @@ sample({
 
 sample({
   clock: addUserToRoomFx.done,
-  target: createUserFormSwitched.prepend(() => false),
+  fn: () => false,
+  target: $createUserForm,
 });
-
-// side effects
-formSubmitted.watch(e => e.preventDefault());

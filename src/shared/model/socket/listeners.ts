@@ -1,11 +1,8 @@
-import { createEffect, createEvent } from 'effector';
+import { createEffect } from 'effector';
 import { Socket } from 'socket.io-client';
 import { LISTENERS } from 'shared/api';
 import { Card } from 'shared/types';
-
-// events
-export const cardsUpdated = createEvent<Card[]>();
-export const cardsShowStateSwitched = createEvent<boolean>();
+import { cardsShowStateSwitched, cardsUpdated } from './events';
 
 // effects
 export const listenCardsFx = createEffect((socket: Socket) =>
