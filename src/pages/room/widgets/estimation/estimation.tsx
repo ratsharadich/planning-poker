@@ -1,9 +1,9 @@
 import { EstimationCard } from 'pages/room/entities';
 import { FC, memo } from 'react';
-import { SocketActions } from 'shared';
 import { fibonacci } from './constants';
 import { useUnit } from 'effector-react';
-import { $socket } from 'shared/model';
+import { SocketActions } from 'shared/api';
+import { $socket } from 'shared/model/socket';
 
 type Props = {
   userId: string;

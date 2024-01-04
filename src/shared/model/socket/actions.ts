@@ -1,6 +1,6 @@
 import { createEffect } from 'effector';
 import { Socket } from 'socket.io-client';
-import { ACTIONS } from 'src/shared';
+import { ACTIONS } from 'shared/api';
 
 export const addUserToRoomFx = createEffect(
   ({ socket, userId }: { socket: Socket | null; userId?: string }) => {
@@ -21,3 +21,7 @@ export const leaveFx = createEffect(
     socket.disconnect();
   },
 );
+
+export const toggleRoomShowStateFx = createEffect((socket: Socket) => {
+  socket.emit(ACTIONS.TOGGLE_ROOM_SHOW_STATE);
+});

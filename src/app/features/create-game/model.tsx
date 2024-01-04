@@ -1,7 +1,9 @@
 import { attach, createEffect, createEvent, sample } from 'effector';
 import { FormEvent } from 'react';
+import { createRoom } from 'shared/api';
+import { $roomName, $userName } from 'shared/model/coords';
+import { goToRoomFx } from 'shared/model/router';
 import { createUserFx } from 'src/pages/room/features';
-import { $roomName, $userName, createRoom, goToRoomFx } from 'src/shared';
 
 // events
 export const formSubmitted = createEvent<FormEvent<HTMLFormElement>>();

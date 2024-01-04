@@ -1,12 +1,13 @@
 import { FC } from 'react';
-import { Button, Input } from 'shared';
 import { useUnit } from 'effector-react';
 import { $isLoading, formSubmitted } from './model';
-import { $userName, userNameChanged } from 'shared/model';
+import { $userName, userNameChanged } from 'shared/model/coords';
+import { Button, Input } from 'shared/ui';
 
 export const CreateUser: FC = () => {
-  const [isLoading, userName] = useUnit([$isLoading, $userName]);
-  const [onUserNameChange, onSubmit] = useUnit([
+  const [isLoading, userName, onUserNameChange, onSubmit] = useUnit([
+    $isLoading,
+    $userName,
     userNameChanged,
     formSubmitted,
   ]);

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { App } from './app';
-import { ErrorPage } from './shared';
 import { Room } from './pages';
+import { ErrorPage } from './shared/ui';
 
 export const router = createBrowserRouter([
   {

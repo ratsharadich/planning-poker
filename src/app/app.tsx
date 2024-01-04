@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from 'react';
-import { Page, Typography } from 'shared';
 import { CreateGame } from './features';
+import { Page, Typography } from 'shared/ui';
 
 export const App: FC = () => {
   const [createForm, setCreateForm] = useState(false);

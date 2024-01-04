@@ -6,8 +6,6 @@ export const createUser = async ({
 }: {
   userName: string;
 }): Promise<string | undefined> => {
-  console.log('sdfsddddd', userName);
-
   const response: AxiosResponse<{ data: string }> = await api.post(`/user`, {
     name: userName,
   });

@@ -17,11 +17,6 @@ const updateCard = ({
   });
 };
 
-const toggleRoomShowState = ({ socket }: { socket: Socket }) => {
-  socket.emit(ACTIONS.TOGGLE_ROOM_SHOW_STATE);
-};
-
 export const SocketActions = {
   updateCard,
-  toggleRoomShowState,
 };

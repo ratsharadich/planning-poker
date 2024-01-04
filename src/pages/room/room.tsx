@@ -1,29 +1,21 @@
 import { FC, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
-import { $roomName, $userId, $userName, Page, Typography } from 'shared';
 import { Estimation, Table } from './widgets';
-import { $createUserForm, CreateUser } from './features';
 import { useGate, useUnit } from 'effector-react';
-import { $cards, $cardsShown, RoomGate, cardsGotten } from './model';
+import { $roomName, $userName } from 'shared/model/coords';
+import { Page, Typography } from 'shared/ui';
+import { CreateUser, $createUserForm } from './features/create-user';
+import { $cards, RoomGate } from './model';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
   const userId = localStorage.getItem('userId') || '';
 
-  const [
-    createUserForm,
-    userName,
-    roomName,
-    cards,
-    cardsShown,
-    handleGetCards,
-  ] = useUnit([
+  const [createUserForm, userName, roomName, cards] = useUnit([
     $createUserForm,
     $userName,
     $roomName,
     $cards,
-    $cardsShown,
-    cardsGotten,
   ]);
 
   useGate(RoomGate, {
@@ -45,18 +37,9 @@ export const Room: FC = () => {
             <Typography.H2>userId: {userId}</Typography.H2>
             <Typography.H2>userName: {userName}</Typography.H2>
             <Typography.H2>roomName: {roomName}</Typography.H2>
-
-            <Typography.H2>Юзеры</Typography.H2>
-            {cards.map(({ id }) => (
-              <div key={id}>
-                <span>{id}</span>
-              </div>
-            ))}
-
-            <button onClick={handleGetCards}>Обновить карты</button>
           </header>
 
-          <Table shown={cardsShown} cards={cards} />
+          <Table cards={cards} />
 
           <Estimation
             userId={userId}

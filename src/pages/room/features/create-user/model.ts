@@ -1,13 +1,8 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { FormEvent } from 'react';
-import { createUser } from 'shared';
-import {
-  $socket,
-  $userName,
-  addUserToRoomFx,
-  setUserIdFx,
-  userIdChanged,
-} from 'shared/model';
+import { createUser } from 'shared/api';
+import { $userName, setUserIdFx, userIdChanged } from 'shared/model/coords';
+import { $socket, addUserToRoomFx } from 'shared/model/socket';
 
 // stores
 export const $isLoading = createStore(false);
@@ -51,8 +46,3 @@ sample({
 
 // side effects
 formSubmitted.watch(e => e.preventDefault());
-
-// watchers
-// $userId.watch(userId => console.log({ userId }, 'userId'));
-// setUserIdFx.watch(userId => console.log('setUserId', { setUserId: userId }));
-addUserToRoomFx.watch(addUserToRoomFx => console.log({ addUserToRoomFx }));

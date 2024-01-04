@@ -1,27 +1,29 @@
 import { FC, useCallback } from 'react';
-import { Button, Card, SocketActions } from 'shared';
 import tw, { styled } from 'twin.macro';
 import { splitCards } from './lib';
 import { useUnit } from 'effector-react';
-import { $socket } from 'shared/model';
+import { Card } from 'shared/types';
+import { $socket, toggleRoomShowStateFx } from 'shared/model/socket';
+import { Button } from 'shared/ui';
+import { $cardsShown } from '../../model';
 
 type Props = {
-  shown: boolean;
   cards: Card[];
 };
 
-export const Table: FC<Props> = ({ shown, cards }) => {
+export const Table: FC<Props> = ({ cards }) => {
+  const [socket, shown, toggleShown] = useUnit([
+    $socket,
+    $cardsShown,
+    toggleRoomShowStateFx,
+  ]);
+
   const { left, top, right, bottom } = splitCards({ shown, cards });
 
-  const socket = useUnit($socket);
-
-  const toggleShowCards = useCallback(() => {
-    if (socket) {
-      SocketActions.toggleRoomShowState({
-        socket,
-      });
-    }
-  }, [socket]);
+  const toggleShowCards = useCallback(
+    () => socket && toggleShown(socket),
+    [socket],
+  );
 
   return (
     <Container>

@@ -1,6 +1,6 @@
 import { PokerCard } from 'pages/room/entities';
 import { ReactNode } from 'react';
-import { Card } from 'shared';
+import { Card } from 'src/shared/types';
 
 type Args = { shown: boolean; cards: Card[] };
 
