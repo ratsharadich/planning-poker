@@ -1,18 +1,17 @@
 import { createEffect } from 'effector';
 import { Socket } from 'socket.io-client';
-import { LISTENERS } from 'shared/api';
-import { Card } from 'shared/types';
-import { cardsShowStateSwitched, cardsUpdated } from './events';
+import { cards_show_state_switched, cards_updated } from './events';
+import { Card, SOCKET_LISTENERS } from 'shared/types';
 
 // effects
-export const listenCardsFx = createEffect((socket: Socket) =>
-  socket.on(LISTENERS.CARDS, (cards: Card[]) => {
-    cardsUpdated(cards);
+export const listen_cards_fx = createEffect((socket: Socket) =>
+  socket.on(SOCKET_LISTENERS.CARDS, (cards: Card[]) => {
+    cards_updated(cards);
   }),
 );
 
-export const listenCardsShowStateFx = createEffect((socket: Socket) => {
-  socket.on(LISTENERS.SHOW_STATE, (shown: boolean) => {
-    cardsShowStateSwitched(shown);
+export const listen_cards_show_state_fx = createEffect((socket: Socket) => {
+  socket.on(SOCKET_LISTENERS.SHOW_STATE, (shown: boolean) => {
+    cards_show_state_switched(shown);
   });
 });

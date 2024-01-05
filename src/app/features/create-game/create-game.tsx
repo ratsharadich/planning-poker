@@ -1,63 +1,31 @@
 import { FC, Fragment } from 'react';
 import { useUnit } from 'effector-react';
 
-import { formSubmitted } from './model';
-import {
-  $roomName,
-  $userName,
-  roomNameChanged,
-  userNameChanged,
-} from 'shared/model/coords';
-import { Button, Input, Typography } from 'shared/ui';
+import { form_showed, form_submitted } from './model';
+import { Button, Typography } from 'shared/ui';
+import { RoomName, Submit, UserName } from './ui';
 
 type Props = {
-  show: boolean;
-  onOpen: () => void;
+  shown: boolean;
 };
 
-export const CreateGame: FC<Props> = ({ show, onOpen }) => {
-  const [userName, roomName, onUserNameChange, onRoomNameChange, onSubmit] =
-    useUnit([
-      $userName,
-      $roomName,
-      userNameChanged,
-      roomNameChanged,
-      formSubmitted,
-    ]);
+export const CreateGame: FC<Props> = ({ shown }) => {
+  const [onFormOpen, onSubmit] = useUnit([form_showed, form_submitted]);
 
   return (
     <Fragment>
-      {!show && (
-        <Button variant="primary" dimension="l" onClick={onOpen}>
+      {!shown && (
+        <Button variant="primary" dimension="l" onClick={onFormOpen}>
           <Typography.Body16_400>Создать</Typography.Body16_400>
         </Button>
       )}
 
-      {show && (
+      {shown && (
         <div tw="flex flex-col items-center gap-3">
           <form tw="flex flex-col items-center gap-1" onSubmit={onSubmit}>
-            <Input
-              variant="l"
-              label="Название игры"
-              value={roomName}
-              onChange={onRoomNameChange}
-            />
-
-            <Input
-              variant="l"
-              label="Ваше имя"
-              value={userName}
-              onChange={onUserNameChange}
-            />
-
-            <Button
-              type="submit"
-              dimension="l"
-              tw="w-full mt-2"
-              disabled={!roomName || !userName}
-            >
-              Создать игру
-            </Button>
+            <RoomName />
+            <UserName />
+            <Submit />
           </form>
         </div>
       )}

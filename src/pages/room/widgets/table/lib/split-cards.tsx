@@ -1,17 +1,13 @@
 import { PokerCard } from 'pages/room/entities';
 import { ReactNode } from 'react';
-import { Card } from 'src/shared/types';
+import { Card } from 'shared/types';
 
-type Args = { shown: boolean; cards: Card[] };
-
-export const getSplittedCards = ({ shown, cards }: Args) => {
+export const getSplittedCards = (cards: Card[]) => {
   return cards.reduce<
     Record<'left' | 'top' | 'right' | 'bottom', Array<ReactNode>>
   >(
     (acc, curr, index) => {
-      const pokerCard = (
-        <PokerCard key={curr.id} shown={shown} value={curr.value} />
-      );
+      const pokerCard = <PokerCard key={curr.id} value={curr.value} />;
 
       if (index >= 0 && index < 1) {
         acc.left.push(pokerCard);

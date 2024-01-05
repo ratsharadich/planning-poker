@@ -2,9 +2,9 @@ import { createEffect } from 'effector';
 import { getRoom } from 'shared/api';
 import { Room } from 'shared/types';
 
-export const getRoomFx = createEffect((roomId: string) => getRoom(roomId));
+export const get_room_fx = createEffect((roomId: string) => getRoom(roomId));
 
-export const checkUserInRoomFx = createEffect(
+export const check_user_in_room_fx = createEffect(
   ({ room, userId }: { room: Room; userId: string }) => {
     const userInRoom = room.users?.find(({ id }) => id === userId);
 

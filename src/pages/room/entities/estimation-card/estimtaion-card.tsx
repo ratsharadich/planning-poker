@@ -1,12 +1,15 @@
+import { useUnit } from 'effector-react';
 import { FC } from 'react';
 import tw, { styled } from 'twin.macro';
+import { task_estimated } from './model';
 
 type Props = {
-  assessment: string | number;
-  onEstimate: (assesment: string | number) => void;
+  assessment: string;
 };
 
-export const EstimationCard: FC<Props> = ({ assessment, onEstimate }) => {
+export const EstimationCard: FC<Props> = ({ assessment }) => {
+  const onEstimate = useUnit(task_estimated);
+
   return (
     <CardStyled onClick={() => onEstimate(assessment)}>{assessment}</CardStyled>
   );

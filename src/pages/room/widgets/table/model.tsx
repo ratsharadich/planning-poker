@@ -5,55 +5,52 @@ import {
   createStore,
   sample,
 } from 'effector';
-import { toggleRoomShowStateFx, $socket } from 'shared/model/socket';
+import { toggle_room_show_state_fx, $socket } from 'shared/model/socket';
 import { Socket } from 'socket.io-client';
-import { $cards, $areCardsUncovered } from '../../model';
-import { Card } from 'src/shared/types';
+import { $cards, $are_cards_uncovered } from '../../model';
+import { Card } from 'shared/types';
 import { getSplittedCards } from './lib';
 import { ReactNode } from 'react';
 import { createGate } from 'effector-react';
-
-export type SplittedCards = Record<
-  'bottom' | 'left' | 'right' | 'top',
-  ReactNode[]
->;
+import { spread } from 'patronum';
 
 // gates
 export const TableGate = createGate();
 
 // stores
-export const $splittedCards = createStore<SplittedCards>({
-  top: [],
-  right: [],
-  bottom: [],
-  left: [],
-});
+export const $top_cards = createStore<ReactNode[]>([]);
+export const $right_cards = createStore<ReactNode[]>([]);
+export const $bottom_cards = createStore<ReactNode[]>([]);
+export const $left_cards = createStore<ReactNode[]>([]);
 
 // events
-export const cardsUncovered = createEvent();
+export const cards_uncovered = createEvent();
 
 // effects
-const splitCardsFx = attach({
-  source: {
-    cards: $cards,
-    shown: $areCardsUncovered,
-  },
-  effect: createEffect((args: { shown: boolean; cards: Card[] }) =>
-    getSplittedCards(args),
-  ),
+const split_cards_fx = attach({
+  source: $cards,
+  effect: createEffect((cards: Card[]) => getSplittedCards(cards)),
 });
 
 // handlers
-$splittedCards.on(splitCardsFx.doneData, (_, cards) => cards);
-
 sample({
-  clock: [$cards, $areCardsUncovered],
-  target: splitCardsFx,
+  clock: [$cards, $are_cards_uncovered],
+  target: split_cards_fx,
 });
 
 sample({
-  clock: cardsUncovered,
+  clock: split_cards_fx.doneData,
+  target: spread({
+    top: $top_cards,
+    right: $right_cards,
+    bottom: $bottom_cards,
+    left: $left_cards,
+  }),
+});
+
+sample({
+  clock: cards_uncovered,
   source: $socket,
   filter: (socket): socket is Socket => Boolean(socket),
-  target: toggleRoomShowStateFx,
+  target: toggle_room_show_state_fx,
 });

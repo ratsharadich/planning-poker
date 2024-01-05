@@ -1,17 +1,14 @@
-import { FC, useCallback, useState } from 'react';
-import { CreateGame } from './features';
+import { FC } from 'react';
+import { $create_game_form, CreateGame } from './features';
 import { Page, Typography } from 'shared/ui';
+import { useUnit } from 'effector-react';
 
 export const App: FC = () => {
-  const [createForm, setCreateForm] = useState(false);
-
-  const handleCreateFormOpen = useCallback(() => {
-    setCreateForm(true);
-  }, []);
+  const [shown] = useUnit([$create_game_form]);
 
   return (
     <Page tw="flex flex-col justify-center items-center gap-4">
-      {!createForm && (
+      {!shown && (
         <header tw="flex flex-col items-center gap-1">
           <Typography.H1>Planning poker</Typography.H1>
           <Typography.Body16_400>
@@ -20,7 +17,7 @@ export const App: FC = () => {
         </header>
       )}
 
-      <CreateGame show={createForm} onOpen={handleCreateFormOpen} />
+      <CreateGame shown={shown} />
     </Page>
   );
 };

@@ -1,6 +1,4 @@
-import { Socket } from 'socket.io-client';
-
-export enum ACTIONS {
+export enum SOCKET_ACTIONS {
   GET_CARDS = 'cards:get',
   GET_SHOW_STATE = 'show-state:get',
   UPDATE_CARD = 'card:update',
@@ -10,7 +8,7 @@ export enum ACTIONS {
   REMOVE_USER = 'user:remove',
 }
 
-export enum LISTENERS {
+export enum SOCKET_LISTENERS {
   CARDS = 'cards',
   SHOW_STATE = 'show-state',
 }

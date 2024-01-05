@@ -2,20 +2,19 @@ import { FC, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 import { Estimation, Table } from './widgets';
 import { useGate, useUnit } from 'effector-react';
-import { $roomName, $userName } from 'shared/model/coords';
+import { $room_name, $user_name } from 'shared/model/coords';
 import { Page, Typography } from 'shared/ui';
-import { CreateUser, $createUserForm } from './features/create-user';
-import { $userCardValue, RoomGate } from './model';
+import { CreateUser, $create_user_form } from './features/create-user';
+import { RoomGate } from './model';
 
 export const Room: FC = () => {
   const { roomId } = useParams();
   const userId = localStorage.getItem('userId') || '';
 
-  const [createUserForm, userName, roomName, userCardValue] = useUnit([
-    $createUserForm,
-    $userName,
-    $roomName,
-    $userCardValue,
+  const [createUserForm, userName, roomName] = useUnit([
+    $create_user_form,
+    $user_name,
+    $room_name,
   ]);
 
   useGate(RoomGate, {
@@ -40,8 +39,7 @@ export const Room: FC = () => {
           </header>
 
           <Table />
-
-          <Estimation userId={userId} cardValue={userCardValue} />
+          <Estimation />
         </Page>
       )}
     </Fragment>

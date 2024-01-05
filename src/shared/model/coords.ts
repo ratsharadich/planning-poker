@@ -3,20 +3,20 @@ import { ChangeEvent } from 'react';
 import { getValidName } from 'shared/lib';
 
 // stores
-export const $userName = createStore('');
-export const $userId = createStore('');
-export const $roomName = createStore('');
+export const $user_name = createStore('');
+export const $user_id = createStore('');
+export const $room_name = createStore('');
 
 // events
-export const userNameChanged = createEvent<ChangeEvent<HTMLInputElement>>();
-export const roomNameChanged = createEvent<ChangeEvent<HTMLInputElement>>();
+export const user_name_changed = createEvent<ChangeEvent<HTMLInputElement>>();
+export const room_name_changed = createEvent<ChangeEvent<HTMLInputElement>>();
 
 // effects
-export const setUserIdFx = createEffect<(userId: string) => string>(userId => {
-  localStorage.setItem('userId', userId);
-  return userId;
+export const set_user_id_fx = createEffect((user_id: string) => {
+  localStorage.setItem('user_id', user_id);
+  return user_id;
 });
 
 // handlers
-$userName.on(userNameChanged, (_, e) => getValidName(e.target.value));
-$roomName.on(roomNameChanged, (_, e) => getValidName(e.target.value));
+$user_name.on(user_name_changed, (_, e) => getValidName(e.target.value));
+$room_name.on(room_name_changed, (_, e) => getValidName(e.target.value));

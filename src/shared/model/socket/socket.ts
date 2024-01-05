@@ -6,13 +6,13 @@ import { Socket, io } from 'socket.io-client';
 export const $socket = createStore<Socket | null>(null);
 
 // effects
-export const setSocketFx = createEffect((roomId: string) => {
+export const set_socket_fx = createEffect((roomId: string) => {
   return io(process.env.BACK_URL || '', {
     query: { roomId },
   });
 });
 
 // handlers
-$socket.on(setSocketFx.doneData, (_, socket) => socket);
+$socket.on(set_socket_fx.doneData, (_, socket) => socket);
 
 debug({ $socket });
