@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { App } from './app';
-import { Room } from './pages';
+import { CreateGame, Room } from './pages';
 import { ErrorPage } from './shared/ui';
 
 export const router = createBrowserRouter([
@@ -8,9 +8,15 @@ export const router = createBrowserRouter([
     path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
-  },
-  {
-    path: 'room/:roomId',
-    element: <Room />,
+    children: [
+      {
+        index: true,
+        element: <CreateGame />,
+      },
+      {
+        path: 'room/:roomId',
+        element: <Room />,
+      },
+    ],
   },
 ]);

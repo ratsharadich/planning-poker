@@ -9,11 +9,14 @@ export const $create_user_form = createStore(false);
 
 // events
 export const form_submitted = createEvent<FormEvent<HTMLFormElement>>();
+export const create_user_form_switched = createEvent<boolean>();
 
 // effects
 export const create_user_fx = createEffect(createUser);
 
 // handlers
+$create_user_form.on(create_user_form_switched, (_, status) => status);
+
 form_submitted.watch(e => e.preventDefault());
 sample({
   clock: form_submitted,

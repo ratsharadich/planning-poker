@@ -1,4 +1,5 @@
 import { createEffect, createEvent, createStore } from 'effector';
+import { debug } from 'patronum';
 import { ChangeEvent } from 'react';
 import { getValidName } from 'shared/lib';
 
@@ -12,9 +13,9 @@ export const user_name_changed = createEvent<ChangeEvent<HTMLInputElement>>();
 export const room_name_changed = createEvent<ChangeEvent<HTMLInputElement>>();
 
 // effects
-export const set_user_id_fx = createEffect((user_id: string) => {
-  localStorage.setItem('user_id', user_id);
-  return user_id;
+export const set_user_id_fx = createEffect((userId: string) => {
+  localStorage.setItem('userId', userId);
+  return userId;
 });
 
 // handlers

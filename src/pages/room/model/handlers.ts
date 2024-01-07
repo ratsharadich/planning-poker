@@ -4,17 +4,17 @@ import {
   $user_name,
   set_user_id_fx,
 } from 'shared/model/coords';
+import { $cards, $are_cards_uncovered, $user_card_value } from './stores';
 import {
-  $cards,
-  $are_cards_uncovered,
-  $users,
-  $user_card_value,
-} from './stores';
-import { check_user_in_room_fx, get_room_fx } from './effects';
+  check_user_in_room_fx,
+  get_room_fx,
+  handle_check_user_error_fx,
+} from './effects';
 import {
   $socket,
   cards_show_state_switched,
   cards_updated,
+  get_cards_fx,
   leave_room_fx,
   listen_cards_fx,
   listen_cards_show_state_fx,
@@ -26,11 +26,10 @@ import { go_to_main_page_fx } from 'shared/model/router';
 import { $create_user_form } from '../features/create-user';
 import { Socket } from 'socket.io-client';
 
-import { spread } from 'patronum';
+import { debug, spread } from 'patronum';
 
 $are_cards_uncovered.on(cards_show_state_switched, (_, shown) => shown);
-$user_name.on(check_user_in_room_fx.doneData, (_, { name }) => name);
-$cards.on(check_user_in_room_fx.doneData, (_, { cards }) => cards);
+$user_name.on(check_user_in_room_fx.doneData, (_, name) => name);
 $cards.on(cards_updated, (_, cards) => cards);
 
 sample({
@@ -38,14 +37,14 @@ sample({
   fn: ({ roomId, userId }) => ({
     getRoom: roomId,
     setSocket: roomId,
-    setUserId: userId,
-    changeUserId: userId,
+    setStorageUserId: userId,
+    setStoreUserId: userId,
   }),
   target: spread({
     getRoom: get_room_fx,
     setSocket: set_socket_fx,
-    setUserId: set_user_id_fx,
-    changeUserId: $user_id,
+    setStorageUserId: set_user_id_fx,
+    setStoreUserId: $user_id,
   }),
 });
 
@@ -55,7 +54,6 @@ sample({
   fn: (userId, room) => ({
     showed: room.showed,
     name: room.name,
-    users: room.users,
     checkUser: {
       userId,
       room,
@@ -64,7 +62,6 @@ sample({
   target: spread({
     showed: $are_cards_uncovered,
     name: $room_name,
-    users: $users,
     checkUser: check_user_in_room_fx,
   }),
 });
@@ -77,9 +74,8 @@ sample({
 
 sample({
   clock: check_user_in_room_fx.failData,
-  filter: error => error.message === 'User is not found!',
-  fn: () => true,
-  target: $create_user_form,
+  fn: ({ message }) => message,
+  target: handle_check_user_error_fx,
 });
 
 sample({
@@ -87,6 +83,13 @@ sample({
   source: $socket,
   filter: (socket): socket is Socket => Boolean(socket),
   target: [listen_cards_fx, listen_cards_show_state_fx],
+});
+
+sample({
+  clock: listen_cards_fx.done,
+  source: $socket,
+  filter: (socket): socket is Socket => Boolean(socket),
+  target: get_cards_fx,
 });
 
 sample({
@@ -104,3 +107,5 @@ sample({
     Boolean(args.socket && args.userId),
   target: leave_room_fx,
 });
+
+debug({ get_room_fx });

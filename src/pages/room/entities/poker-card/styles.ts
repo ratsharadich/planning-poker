@@ -1,5 +1,7 @@
 import tw, { css, styled } from 'twin.macro';
 
+export const Container = tw.div`grid gap-1 justify-items-center`;
+
 export const CardStyled = styled.article`
   ${tw`w-10 h-[4.375rem] relative shrink-0`}
   ${css`

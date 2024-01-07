@@ -12,26 +12,24 @@ export const CreateUser: FC = () => {
   ]);
 
   return (
-    <div tw="h-full w-full flex justify-center items-center">
-      <div tw="flex flex-col items-center gap-3">
-        <form tw="flex flex-col items-center gap-1" onSubmit={onSubmit}>
-          <Input
-            variant="l"
-            label="Ваше имя"
-            value={userName}
-            onChange={onUserNameChange}
-          />
+    <div tw="flex flex-col items-center gap-3">
+      <form tw="flex flex-col items-center gap-1" onSubmit={onSubmit}>
+        <Input
+          variant="l"
+          label="Ваше имя"
+          value={userName}
+          onChange={onUserNameChange}
+        />
 
-          <Button
-            type="submit"
-            dimension="l"
-            tw="w-full mt-2"
-            disabled={!userName}
-          >
-            Создать игру
-          </Button>
-        </form>
-      </div>
+        <Button
+          type="submit"
+          dimension="l"
+          tw="w-full mt-2"
+          disabled={!userName}
+        >
+          Создать игру
+        </Button>
+      </form>
     </div>
   );
 };

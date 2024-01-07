@@ -7,7 +7,9 @@ export const getSplittedCards = (cards: Card[]) => {
     Record<'left' | 'top' | 'right' | 'bottom', Array<ReactNode>>
   >(
     (acc, curr, index) => {
-      const pokerCard = <PokerCard key={curr.id} value={curr.value} />;
+      const pokerCard = (
+        <PokerCard key={curr.id} userName={curr.user.name} value={curr.value} />
+      );
 
       if (index >= 0 && index < 1) {
         acc.left.push(pokerCard);

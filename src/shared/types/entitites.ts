@@ -3,6 +3,7 @@ export type Card = {
   value: string;
   userId: string;
   roomId: string;
+  user: Omit<User, 'cards'>;
 };
 
 export type User = {
